@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secure Checkout — Zova Digital</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode:"class",
+  theme:{extend:{
+    colors:{
+      "surface":"#0f0524","background":"#0f0524","on-surface":"#f5f0ff",
+      "on-surface-variant":"#e9d5ff","surface-variant":"#2e1065",
+      "primary":"#c084fc","primary-container":"#a855f7",
+      "secondary":"#f9a8d4","secondary-container":"#db2777",
+      "outline":"#a78bfa","outline-variant":"#4c1d95",
+      "surface-container":"#1e0a3c","surface-container-low":"#180838",
+      "surface-container-high":"#2d1060","surface-bright":"#3b1278",
+      "airtel":"#C8102E","mtn":"#FFC107","zamtel":"#007A4D"
+    },
+    fontFamily:{"sans":["DM Sans","sans-serif"]},
+    borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","2xl":"1rem","full":"9999px"},
+  }}
+}
+</script>
+<style>
+  *{box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#0f0524 0%,#1e0a3c 50%,#2d1040 100%);min-height:100vh}
+
+  .glass-dark{background:rgba(15,5,36,0.65);backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(255,255,255,0.10)}
+  .glass-mid{background:rgba(20,8,48,0.55);backdrop-filter:blur(12px) saturate(160%);border:1px solid rgba(255,255,255,0.08)}
+  .glass-light{background:rgba(255,248,255,0.68);backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(139,92,246,0.15)}
+
+  .zova-check{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.5px solid rgba(109,40,217,0.35);border-radius:4px;background:rgba(255,255,255,0.55);cursor:pointer;position:relative;flex-shrink:0;transition:all .15s}
+  .zova-check:checked{background:#6d28d9;border-color:#6d28d9}
+  .zova-check:checked::after{content:'';position:absolute;left:4px;top:1px;width:6px;height:10px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg)}
+  .zova-check:focus{outline:2px solid rgba(192,132,252,0.5);outline-offset:2px}
+
+  .net-card input:checked ~ .net-face{border-width:2px}
+  .net-card input[data-net="airtel"]:checked ~ .net-face{border-color:#C8102E;background:rgba(200,16,46,0.10)}
+  .net-card input[data-net="mtn"]:checked ~ .net-face{border-color:#FFC107;background:rgba(255,193,7,0.10)}
+  .net-card input[data-net="zamtel"]:checked ~ .net-face{border-color:#007A4D;background:rgba(0,122,77,0.10)}
+
+  .promo-input::placeholder{color:rgba(107,114,128,0.7)}
+  .promo-input:focus{outline:none;border-color:rgba(109,40,217,0.45);background:rgba(255,255,255,0.80)}
+
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .acc-body.open{max-height:400px}
+  .acc-icon{transition:transform .25s ease}
+  .acc-icon.open{transform:rotate(180deg)}
+
+  .pay-btn{position:relative;overflow:hidden}
+  .pay-btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.10),transparent);transition:left .4s ease}
+  .pay-btn:hover::after{left:140%}
+
+  .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(109,40,217,0.15),transparent)}
+
+  .dot-airtel{box-shadow:0 0 8px rgba(200,16,46,0.45)}
+  .dot-mtn{box-shadow:0 0 8px rgba(255,193,7,0.45)}
+  .dot-zamtel{box-shadow:0 0 8px rgba(0,122,77,0.45)}
+
+  .tip{position:relative;cursor:help}
+  .tip .tip-box{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e0a3c;color:#e9d5ff;font-size:11px;padding:6px 10px;border-radius:6px;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);transition:opacity .15s;pointer-events:none;z-index:50}
+  .tip:hover .tip-box{visibility:visible;opacity:1}
+</style>
+</head>
+<body class="flex items-start justify-center p-6 md:p-10">
+
+<!-- Ambient glows -->
+<div class="fixed -top-[15%] -left-[5%] w-[45%] h-[45%] bg-[#a855f7] opacity-[0.10] blur-[120px] rounded-full pointer-events-none"></div>
+<div class="fixed top-[50%] right-[5%] w-[30%] h-[30%] bg-[#ec4899] opacity-[0.08] blur-[100px] rounded-full pointer-events-none"></div>
+
+<div class="w-full max-w-5xl">
+
+  <!-- Header bar -->
+  <div class="flex items-center justify-between mb-6">
+    <button onclick="window.location.href='index.html'" class="flex items-center gap-1.5 text-[#e9d5ff] hover:text-white text-sm transition-colors group">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+      Back to Store
+    </button>
+    <img src="./assets/logo.png" alt="Zova Digital Logo" class="h-6 w-auto" />
+    <div class="flex items-center gap-1.5 text-xs text-[#a78bfa]">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Secure Checkout
+    </div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] gap-5">
+
+    <!-- ── LEFT: Summary Panel ── -->
+    <div class="glass-dark rounded-2xl p-7 flex flex-col gap-6 relative overflow-hidden">
+
+      <!-- Subtle inner glow -->
+      <div class="absolute top-0 right-0 w-48 h-48 bg-[#a855f7] opacity-[0.06] blur-[60px] rounded-full pointer-events-none"></div>
+
+      <!-- Plan badge + name -->
+      <div>
+        <span class="inline-flex items-center gap-1.5 bg-[#c084fc]/15 text-[#c084fc] text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border border-[#c084fc]/20 mb-3">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Selected Product
+        </span>
+        <h2 id="checkout-title" class="text-white text-2xl font-bold tracking-tight leading-tight">Annual Subscription</h2>
+        <p class="text-[#e9d5ff] text-sm mt-1 opacity-75">Billed once · Instant Delivery</p>
+      </div>
+
+      <!-- Amount -->
+      <div class="glass-mid rounded-xl p-5">
+        <p class="text-[10px] font-bold tracking-widest uppercase text-[#a78bfa] mb-1">Amount Due</p>
+        <div class="flex items-baseline gap-1.5">
+          <span id="amount-currency" class="text-[#a78bfa] text-sm font-medium">ZMW</span>
+          <span id="amount-value" class="text-[#c084fc] text-4xl font-bold tracking-tight">4,500.00</span>
+        </div>
+      </div>
+
+      <!-- Order Summary accordion -->
+      <div>
+        <button onclick="toggleAcc()" class="w-full flex items-center justify-between text-left group mb-3">
+          <span class="text-[10px] font-bold tracking-widest uppercase text-[#a78bfa]">Order Summary</span>
+          <svg id="acc-icon" class="acc-icon text-[#a78bfa] group-hover:text-white transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+
+        <div id="acc-body" class="acc-body open">
+          <div class="space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <p id="summary-product-name" class="text-[#f5f0ff] text-sm font-medium">Premium Annual Access</p>
+                <p class="text-[#a78bfa] text-xs">Lifetime Access</p>
+              </div>
+              <span id="summary-product-price" class="text-[#f5f0ff] text-sm font-semibold">ZMW 4,500</span>
+            </div>
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-[#f5f0ff] text-sm font-medium">Processing Fee</p>
+                <p class="text-[#a78bfa] text-xs">Network fees</p>
+              </div>
+              <span class="text-[#f9a8d4] text-sm font-semibold">Free</span>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-white/10 space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-[#a78bfa]">Subtotal</span>
+              <span id="subtotal-display" class="text-[#e9d5ff]">ZMW 4,500.00</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-[#a78bfa]">VAT (16%)</span>
+              <span id="vat-display" class="text-[#e9d5ff]">ZMW 0.00</span>
+            </div>
+            <div class="flex justify-between text-sm items-center">
+              <span class="text-[#a78bfa] flex items-center gap-1">
+                Promo discount
+                <span class="tip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                  <span class="tip-box">Apply a code on the right panel</span>
+                </span>
+              </span>
+              <span id="discount-display" class="text-[#f9a8d4]">—</span>
+            </div>
+            <div class="pt-2 border-t border-white/10 flex justify-between">
+              <span class="text-white font-semibold text-sm">Total</span>
+              <span id="total-display" class="text-[#c084fc] font-bold text-sm">ZMW 4,500.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What's included -->
+      <div>
+        <p class="text-[10px] font-bold tracking-widest uppercase text-[#a78bfa] mb-3">What's Included</p>
+        <ul class="space-y-2.5">
+          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Unlimited digital product access
+          </li>
+          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+            High-speed premium downloads
+          </li>
+          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Free future content updates
+          </li>
+          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Priority customer support
+          </li>
+        </ul>
+      </div>
+
+      <!-- Refund note -->
+      <div class="glass-mid rounded-xl p-4 flex gap-3 items-start">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" class="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <p class="text-[#a78bfa] text-xs leading-relaxed">14-day money-back guarantee. No questions asked. We are committed to your success.</p>
+      </div>
+    </div>
+
+    <!-- ── RIGHT: Payment Form ── -->
+    <div class="glass-light rounded-2xl p-7 flex flex-col gap-6 text-[#2e1065]">
+
+      <div>
+        <h2 class="text-[#2e1065] text-xl font-bold tracking-tight">Complete Payment</h2>
+        <p class="text-[#7e6ea8] text-sm mt-1">Select your network and enter your mobile number.</p>
+      </div>
+
+      <!-- Network selector -->
+      <div>
+        <p class="text-[10px] font-bold tracking-widest uppercase text-[#7e6ea8] mb-3">Payment Network</p>
+        <div class="grid grid-cols-3 gap-3">
+
+          <label class="net-card cursor-pointer">
+            <input type="radio" name="network" data-net="airtel" class="sr-only" onchange="setNet('airtel')"/>
+            <div class="net-face glass-light p-3 rounded-xl border-2 border-transparent transition-all flex flex-col items-center gap-2 relative overflow-hidden">
+              <div class="absolute inset-0 bg-[#C8102E] opacity-0 pointer-events-none transition-opacity"></div>
+              <div class="w-5 h-5 rounded-full bg-[#C8102E] dot-airtel"></div>
+              <span class="text-[10px] font-bold tracking-wider text-[#3b0764]">AIRTEL</span>
+            </div>
+          </label>
+
+          <label class="net-card cursor-pointer">
+            <input type="radio" name="network" data-net="mtn" class="sr-only" checked onchange="setNet('mtn')"/>
+            <div class="net-face glass-light p-3 rounded-xl border-2 border-[#FFC107] bg-[#FFC107]/10 transition-all flex flex-col items-center gap-2 relative overflow-hidden">
+              <div class="w-5 h-5 rounded-full bg-[#FFC107] dot-mtn"></div>
+              <span class="text-[10px] font-bold tracking-wider text-[#3b0764]">MTN</span>
+            </div>
+          </label>
+
+          <label class="net-card cursor-pointer">
+            <input type="radio" name="network" data-net="zamtel" class="sr-only" onchange="setNet('zamtel')"/>
+            <div class="net-face glass-light p-3 rounded-xl border-2 border-transparent transition-all flex flex-col items-center gap-2 relative overflow-hidden">
+              <div class="w-5 h-5 rounded-full bg-[#007A4D] dot-zamtel"></div>
+              <span class="text-[10px] font-bold tracking-wider text-[#3b0764]">ZAMTEL</span>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- Phone input -->
+      <div>
+        <p class="text-[10px] font-bold tracking-widest uppercase text-[#7e6ea8] mb-3">Mobile Number</p>
+        <div class="flex rounded-xl overflow-hidden border border-[#a78bfa]/30 bg-white/55 backdrop-blur-sm focus-within:border-[#6d28d9]/50 focus-within:bg-white/75 transition-all">
+          <div class="px-4 flex items-center gap-2 border-r border-[#a78bfa]/20 bg-white/40 flex-shrink-0">
+            <span class="text-lg">🌍</span>
+            <span id="country-code" class="text-[#3b0764] font-semibold text-sm">+260</span>
+          </div>
+          <input id="phone-input" type="tel" inputmode="numeric" maxlength="15"
+            placeholder="0977 123 456"
+            oninput="validatePhone()"
+            class="promo-input flex-1 bg-transparent px-4 py-3.5 text-[#2e1065] text-sm font-medium focus:outline-none placeholder:text-[#a78bfa]"/>
+        </div>
+        <p class="text-[#a78bfa] text-[11px] mt-1.5 flex items-center gap-1">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Enter mobile number (e.g. 0977 123 456)
+        </p>
+      </div>
+
+      <!-- Promo code -->
+      <div>
+        <p class="text-[10px] font-bold tracking-widest uppercase text-[#7e6ea8] mb-3">Promo Code <span class="normal-case font-normal tracking-normal opacity-60">(optional)</span></p>
+        <div class="flex gap-2">
+          <input id="promo-input" type="text" placeholder="e.g. ZOVA20"
+            class="promo-input flex-1 bg-white/55 backdrop-blur-sm border border-[#a78bfa]/25 rounded-xl px-4 py-3 text-sm text-[#2e1065] uppercase tracking-widest placeholder:normal-case placeholder:tracking-normal placeholder:text-[#a78bfa] focus:outline-none transition-all"/>
+          <button onclick="applyPromo()" class="px-5 py-3 bg-[#4c1d95]/90 text-white rounded-xl text-sm font-semibold hover:bg-[#4c1d95] transition-colors flex-shrink-0">
+            Apply
+          </button>
+        </div>
+        <p id="promo-msg" class="text-[11px] mt-1.5 hidden"></p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Checkboxes -->
+      <div class="space-y-4">
+        <p class="text-[10px] font-bold tracking-widest uppercase text-[#7e6ea8]">Confirm & Agree</p>
+
+        <label class="flex items-start gap-3 cursor-pointer group">
+          <input type="checkbox" id="terms-check" class="zova-check mt-0.5" onchange="validateForm()"/>
+          <span class="text-[#3b0764] text-sm leading-relaxed">
+            I agree to the
+            <a href="#" class="text-[#6d28d9] font-semibold underline underline-offset-2 hover:text-[#4c1d95]">Terms of Service</a>
+            and
+            <a href="#" class="text-[#6d28d9] font-semibold underline underline-offset-2 hover:text-[#4c1d95]">Privacy Policy</a>
+          </span>
+        </label>
+
+        <label class="flex items-start gap-3 cursor-pointer group">
+          <input type="checkbox" id="recurring-check" class="zova-check mt-0.5" onchange="validateForm()"/>
+          <span class="text-[#3b0764] text-sm leading-relaxed">
+            I understand this is a
+            <span class="font-semibold">one-time payment</span>
+            of <span id="confirm-price">ZMW 4,500.00</span> and authorise ZOVA Digital to process this transaction
+          </span>
+        </label>
+
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" id="updates-check" class="zova-check mt-0.5"/>
+          <span class="text-[#7e6ea8] text-sm leading-relaxed">
+            Send me product updates, new features, and exclusive offers <span class="opacity-60">(optional)</span>
+          </span>
+        </label>
+      </div>
+
+      <!-- Pay button -->
+      <button id="pay-btn" disabled onclick="handlePay()"
+        class="pay-btn w-full bg-[#3b0764] disabled:opacity-40 disabled:cursor-not-allowed text-white py-4 px-6 rounded-xl font-semibold text-[15px] flex items-center justify-between transition-all hover:bg-[#4c1d95] group">
+        <span id="pay-btn-text">Pay ZMW 4,500.00</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" class="group-hover:translate-x-0.5 transition-transform"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <!-- Trust row -->
+      <div class="flex items-center justify-center gap-4 flex-wrap">
+        <div class="flex items-center gap-1.5 text-[#a78bfa] text-[11px]">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          256-bit encryption
+        </div>
+        <div class="w-px h-3 bg-[#a78bfa]/25"></div>
+        <div class="flex items-center gap-1.5 text-[#a78bfa] text-[11px]">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Lenco BroadPay
+        </div>
+        <div class="w-px h-3 bg-[#a78bfa]/25"></div>
+        <div class="flex items-center gap-1.5 text-[#a78bfa] text-[11px]">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          14-day guarantee
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="mt-6 text-center text-[#6b4fa8] text-xs flex items-center justify-center gap-4 flex-wrap">
+    <span>© 2026 ZOVA Digital · Lusaka, Zambia</span>
+    <span class="opacity-40">·</span>
+    <a href="#" class="hover:text-[#c084fc] transition-colors">Privacy Policy</a>
+    <span class="opacity-40">·</span>
+    <a href="#" class="hover:text-[#c084fc] transition-colors">Terms of Service</a>
+    <span class="opacity-40">·</span>
+    <a href="#" class="hover:text-[#c084fc] transition-colors">Support</a>
+  </div>
+</div>
+
+<script>
+const PROMOS = { "ZOVA20": 20, "LAUNCH10": 10, "VIP30": 30 };
+let BASE = 4500;
+let CURRENCY = 'ZMW';
+let PRODUCT_NAME = 'Digital Asset';
+let activeDiscount = 0;
+
+window.onload = () => {
+    const params = new URLSearchParams(window.location.search);
+    const productParam = params.get('product');
+    const priceParam = parseFloat(params.get('price'));
+    const currencyParam = params.get('currency');
+
+    if (productParam && !isNaN(priceParam)) {
+        BASE = priceParam;
+        CURRENCY = currencyParam || 'ZMW';
+        PRODUCT_NAME = productParam;
+        
+        document.getElementById('checkout-title').innerText = productParam;
+        document.getElementById('summary-product-name').innerText = productParam;
+        document.getElementById('amount-currency').innerText = CURRENCY;
+        document.getElementById('amount-value').innerText = BASE.toFixed(2);
+        
+        document.getElementById('summary-product-price').innerText = `${CURRENCY} ${BASE.toFixed(0)}`;
+        document.getElementById('subtotal-display').innerText = `${CURRENCY} ${BASE.toFixed(2)}`;
+        document.getElementById('vat-display').innerText = `${CURRENCY} 0.00`;
+        
+        // Update country code based on currency
+        const codes = { 'ZMW': '+260', 'KES': '+254', 'NGN': '+234', 'GHS': '+233', 'UGX': '+256' };
+        if (codes[CURRENCY]) {
+            document.getElementById('country-code').innerText = codes[CURRENCY];
+        }
+
+        updateTotal();
+    }
+};
+
+function updateTotal() {
+    const newTotal = BASE - activeDiscount;
+    const totalStr = `${CURRENCY} ${newTotal.toFixed(2)}`;
+    document.getElementById('total-display').innerText = totalStr;
+    document.getElementById('confirm-price').innerText = totalStr;
+    document.getElementById('pay-btn-text').innerText = `Pay ${totalStr}`;
+}
+
+function toggleAcc() {
+  const body = document.getElementById('acc-body');
+  const icon = document.getElementById('acc-icon');
+  body.classList.toggle('open');
+  icon.classList.toggle('open');
+}
+
+function setNet(id) {
+  document.querySelectorAll('.net-face').forEach(f => {
+    f.style.borderColor = 'transparent';
+    f.style.background = '';
+  });
+  const colors = { airtel:'#C8102E', mtn:'#FFC107', zamtel:'#007A4D' };
+  const card = document.querySelector(`input[data-net="${id}"]`).nextElementSibling;
+  card.style.borderColor = colors[id];
+  card.style.background = `${colors[id]}18`;
+}
+
+function applyPromo() {
+  const val = document.getElementById('promo-input').value.trim().toUpperCase();
+  const msg = document.getElementById('promo-msg');
+  const discEl = document.getElementById('discount-display');
+
+  if (PROMOS[val]) {
+    const pct = PROMOS[val];
+    activeDiscount = Math.round(BASE * pct / 100);
+    discEl.textContent = `-${CURRENCY} ${activeDiscount.toFixed(2)}`;
+    updateTotal();
+    msg.textContent = `✓ ${pct}% discount applied`;
+    msg.className = 'text-[11px] mt-1.5 text-[#7c3aed] font-medium';
+    msg.classList.remove('hidden');
+  } else if (val) {
+    msg.textContent = 'Invalid promo code';
+    msg.className = 'text-[11px] mt-1.5 text-[#C8102E]';
+    msg.classList.remove('hidden');
+  }
+}
+
+function validatePhone() { validateForm(); }
+
+function validateForm() {
+  const phone = document.getElementById('phone-input').value.replace(/\D/g,'');
+  const terms = document.getElementById('terms-check').checked;
+  const recurring = document.getElementById('recurring-check').checked;
+  document.getElementById('pay-btn').disabled = !(phone.length >= 8 && terms && recurring);
+}
+
+let pollingInterval = null;
+
+async function handlePay() {
+  const btn = document.getElementById('pay-btn');
+  const phone = document.getElementById('phone-input').value.replace(/\D/g,'');
+  const network = document.querySelector('input[name="network"]:checked').dataset.net;
+  
+  // Format for button loading state
+  btn.innerHTML = `<span class="flex items-center gap-2 mx-auto"><svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Connecting to ${network.toUpperCase()}...</span>`;
+  btn.disabled = true;
+
+  try {
+      const response = await fetch('/api/pay', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+              phone: phone,
+              amount: BASE - activeDiscount,
+              currency: CURRENCY,
+              network: network,
+              product: PRODUCT_NAME
+          })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success && data.transaction_id) {
+          // Successfully initiated STK Push
+          btn.innerHTML = `<span class="flex items-center gap-2 mx-auto"><svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Check phone & enter PIN...</span>`;
+          btn.style.background = '#7c3aed';
+          
+          // Start polling for status
+          pollStatus(data.transaction_id, btn);
+      } else {
+          // Failed to initiate
+          btn.innerHTML = `<span>Payment Failed: ${data.message || 'Error'}</span>`;
+          btn.style.background = '#C8102E'; // Red
+          setTimeout(() => resetPayBtn(btn), 3000);
+      }
+  } catch (error) {
+      console.error(error);
+      btn.innerHTML = `<span>Network Error. Try again.</span>`;
+      btn.style.background = '#C8102E';
+      setTimeout(() => resetPayBtn(btn), 3000);
+  }
+}
+
+async function pollStatus(txnId, btn) {
+    let attempts = 0;
+    const maxAttempts = 24; // 2 mins total assuming 5s interval
+    
+    pollingInterval = setInterval(async () => {
+        attempts++;
+        if (attempts > maxAttempts) {
+            clearInterval(pollingInterval);
+            btn.innerHTML = `<span>Timeout. Try again later.</span>`;
+            btn.style.background = '#C8102E';
+            setTimeout(() => resetPayBtn(btn), 3000);
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/status/${txnId}`);
+            const data = await res.json();
+            
+            if (data.success) {
+                if (data.status === 'SUCCESSFUL') {
+                    clearInterval(pollingInterval);
+                    btn.innerHTML = `<span class="flex items-center gap-2 mx-auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Payment Successful!</span>`;
+                    btn.style.background = '#22C55E'; // Green
+                    
+                    if (data.download_link) {
+                        setTimeout(() => {
+                            window.location.href = data.download_link;
+                        }, 1500);
+                    }
+                } else if (data.status === 'FAILED') {
+                    clearInterval(pollingInterval);
+                    btn.innerHTML = `<span>Payment Failed</span>`;
+                    btn.style.background = '#C8102E';
+                    setTimeout(() => resetPayBtn(btn), 3000);
+                }
+                // If PENDING, do nothing, loop continues
+            }
+        } catch (e) {
+            console.error("Polling error", e);
+        }
+    }, 5000); // 5 seconds polling
+}
+
+function resetPayBtn(btn) {
+    btn.disabled = false;
+    btn.style.background = '';
+    btn.innerHTML = `<span id="pay-btn-text">Pay ${CURRENCY} ${(BASE - activeDiscount).toFixed(2)}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" class="group-hover:translate-x-0.5 transition-transform"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('promo-input') === document.activeElement) applyPromo();
+});
+</script>
+</body>
+</html>

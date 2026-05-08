@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZOVA Digital — Zambia's Premium Digital Store</title>
+<meta name="description" content="Premium digital assets, courses and AI tools for Zambian professionals. Pay securely with Airtel, MTN or Zamtel money.">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+<meta name="theme-color" content="#0b1326">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #d0bcff; --tertiary: #fbabff; --secondary: #adc6ff;
+  --primary-cnt: #a078ff; --tertiary-cnt: #e14ef6;
+  --bg: #0b1326; --surface: #0b1326; --surface-low: #131b2e;
+  --surface-cnt: #171f33; --surface-high: #222a3d; --surface-highest: #2d3449;
+  --surface-lowest: #060e20;
+  --on-surface: #dae2fd; --on-muted: #cbc3d7; --outline: #494454;
+  --glass-bdr: rgba(255,255,255,0.1); --glass-bdr2: rgba(255,255,255,0.2);
+  --gold: #d0bcff;
+  --v: #a078ff; --v2: #d0bcff; --bg-glass: rgba(45,52,73,0.4); --text: #dae2fd; --muted: #cbc3d7;
+}
+body { font-family: 'Inter', 'Manrope', sans-serif; background: var(--bg); color: var(--on-surface); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+.mesh-bg { background-image: radial-gradient(at 0% 0%, rgba(160,120,255,0.18) 0px, transparent 50%), radial-gradient(at 60% 0%, rgba(225,78,246,0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(173,198,255,0.1) 0px, transparent 50%); }
+.slash-overlay { background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.015) 10px, rgba(255,255,255,0.015) 11px); }
+button, a { cursor: pointer; font-family: inherit; text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; border: none; border-radius: 9999px; padding: 14px 28px; font-weight: 600; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+.btn-v { background: linear-gradient(135deg, var(--primary-cnt), var(--tertiary-cnt)); color: #fff; box-shadow: 0 0 24px rgba(160,120,255,0.45); }
+.btn-v:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(160,120,255,0.65); opacity: 0.92; }
+.btn-v:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-out { background: rgba(45,52,73,0.4); border: 1px solid var(--glass-bdr2); color: var(--on-surface); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.btn-out:hover { background: rgba(255,255,255,0.08); }
+.glass-panel { background: rgba(45,52,73,0.4); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid var(--glass-bdr); border-top-color: var(--glass-bdr2); border-left-color: var(--glass-bdr2); }
+.fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+.fade-up.visible { opacity: 1; transform: none; }
+
+body { font-family: 'Inter', sans-serif; }
+h1,h2,h3,.brand { font-family: 'Manrope', sans-serif; }
+
+/* Nav */
+nav { position: fixed; top: 0; width: 100%; z-index: 100; height: 80px; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s; }
+nav.scrolled { background: rgba(11,19,38,0.75); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border-bottom: 1px solid var(--glass-bdr); }
+.nav-links a { color: var(--on-muted); margin-left: 32px; font-weight: 500; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover { color: var(--primary); }
+
+/* Layout */
+section { padding: 96px 48px; max-width: 1280px; margin: 0 auto; }
+.sec-label { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); margin-bottom: 12px; text-align: center; }
+h2 { font-size: clamp(28px,4vw,40px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; text-align: center; color: var(--on-surface); }
+.sec-desc { text-align: center; color: var(--on-muted); max-width: 580px; margin: 0 auto 56px; font-size: 16px; line-height: 1.7; }
+
+/* Hero */
+.hero { min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; padding: 120px 24px; overflow: hidden; background: radial-gradient(circle at center, rgba(109,59,215,0.08) 0%, transparent 70%); }
+.hero::before { content: ''; position: absolute; top: -10%; left: -5%; width: 40%; height: 40%; border-radius: 50%; background: rgba(109,59,215,0.15); filter: blur(100px); pointer-events: none; }
+h1 { font-size: clamp(44px, 8vw, 72px); font-weight: 800; line-height: 1.05; letter-spacing: -0.04em; margin-bottom: 24px; color: #fff; }
+h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-sub { font-size: clamp(18px, 2.5vw, 22px); color: var(--on-muted); max-width: 650px; margin: 0 auto 48px; line-height: 1.6; font-weight: 400; }
+.pill-badge { display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; border-radius: 9999px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); font-size: 13px; font-weight: 600; letter-spacing: 0.05em; color: var(--on-surface); text-transform: uppercase; margin-bottom: 40px; backdrop-filter: blur(20px); }
+.pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #6d3bd7; box-shadow: 0 0 10px #6d3bd7; display: inline-block; }
+
+/* Trusted bar */
+.trust-bar { border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(6,14,32,0.5); padding: 24px 0; overflow: hidden; }
+.marquee-track { display: flex; gap: 80px; width: max-content; animation: marquee 30s linear infinite; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.trust-item { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700; color: var(--on-muted); opacity: 0.5; transition: opacity 0.3s; }
+.trust-item:hover { opacity: 1; }
+.trust-item img { height: 24px; filter: grayscale(1) invert(1); }
+
+/* FAQ Section */
+.faq-grid { max-width: 800px; margin: 0 auto; display: grid; gap: 16px; }
+.faq-item { border: 1px solid var(--glass-bdr); border-radius: 16px; overflow: hidden; background: rgba(45,52,73,0.3); transition: all 0.3s; }
+.faq-item:hover { background: rgba(45,52,73,0.45); }
+.faq-q { padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--on-surface); }
+.faq-a { padding: 0 24px 24px; color: var(--on-muted); font-size: 15px; line-height: 1.6; display: none; }
+.faq-item.active .faq-a { display: block; }
+.faq-item.active .faq-q { color: var(--primary); }
+.faq-item.active .faq-q svg { transform: rotate(180deg); }
+.faq-q svg { transition: transform 0.3s; }
+
+/* Pricing Cards */
+.region-filter-wrapper { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 40px; }
+.region-filter { background: rgba(45,52,73,0.6); border: 1px solid var(--glass-bdr); border-radius: 9999px; padding: 12px 32px; color: var(--on-surface); font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 600; outline: none; cursor: pointer; text-align: center; backdrop-filter: blur(12px); appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; padding-right: 48px; }
+.region-filter option { background: #060e20; }
+.payment-methods-text { font-size: 13px; color: var(--on-muted); font-weight: 500; }
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; max-width: 1100px; margin: 0 auto 48px; align-items: stretch; }
+.prc-card { display: flex; flex-direction: column; padding: 24px; border-radius: 20px; position: relative; transition: transform 0.3s, box-shadow 0.3s; background: rgba(45,52,73,0.3); border: 1px solid rgba(255,255,255,0.06); }
+.prc-card:hover { transform: translateY(-4px); box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+.prc-card.featured { border-color: rgba(160,120,255,0.4); background: rgba(45,52,73,0.55); box-shadow: 0 0 0 1px rgba(160,120,255,0.3), 0 24px 60px rgba(160,120,255,0.15); }
+.prc-popular-badge { position: absolute; top: 16px; right: 16px; background: linear-gradient(135deg,#a078ff,#e14ef6); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; padding: 6px 16px; border-radius: 9999px; text-transform: uppercase; white-space: nowrap; z-index: 2; box-shadow: 0 4px 12px rgba(160,120,255,0.4); }
+.prc-img-wrapper { position: relative; width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 24px; aspect-ratio: 16/9; border: 1px solid rgba(255,255,255,0.08); background: #12182b; }
+.prc-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.prc-card:hover .prc-img { transform: scale(1.05); }
+.prc-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.prc-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(160,120,255,0.12); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.prc-title-group { flex: 1; }
+.prc-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--primary); margin-bottom: 4px; }
+.prc-title { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--on-surface); line-height: 1.3; }
+.prc-desc { font-size: 14px; color: var(--on-muted); line-height: 1.6; margin-bottom: 20px; }
+.prc-price-block { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.prc-price { font-family: 'Manrope', sans-serif; font-size: 36px; font-weight: 800; color: var(--on-surface); letter-spacing: -0.03em; line-height: 1; }
+.prc-price span.prc-period { font-size: 14px; font-weight: 600; color: var(--on-muted); margin-left: 6px; vertical-align: middle; letter-spacing: normal; }
+.prc-features { list-style: none; flex: 1; margin-bottom: 28px; }
+.prc-features li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--on-muted); padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.prc-features li:last-child { border-bottom: none; }
+.prc-check { width: 18px; height: 18px; border-radius: 50%; background: rgba(160,120,255,0.15); border: 1px solid rgba(160,120,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--primary); flex-shrink: 0; margin-top: 2px; }
+.prc-cta { display: block; width: 100%; text-align: center; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.3s; margin-top: auto; }
+
+/* About */
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.about-visual { border-radius: 20px; overflow: hidden; min-height: 320px; background: linear-gradient(135deg, rgba(160,120,255,0.15), rgba(225,78,246,0.1)); border: 1px solid var(--glass-bdr); display: flex; align-items: center; justify-content: center; font-size: 80px; }
+
+/* Services */
+.services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.scard { padding: 36px; border-radius: 16px; transition: transform 0.3s, border-color 0.3s; position: relative; overflow: hidden; }
+.scard:hover { transform: translateY(-6px); }
+.scard::before { content: ''; position: absolute; top: 0; right: 0; width: 40%; height: 40%; background: radial-gradient(circle, rgba(160,120,255,0.1), transparent); pointer-events: none; }
+.scard-icon { width: 56px; height: 56px; border-radius: 14px; background: rgba(160,120,255,0.1); border: 1px solid rgba(160,120,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
+
+/* Testimonials */
+.wall-track { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 16px; scroll-snap-type: x mandatory; -ms-overflow-style: none; scrollbar-width: none; }
+.wall-track::-webkit-scrollbar { display: none; }
+.tcard { flex: 0 0 340px; padding: 32px; border-radius: 16px; scroll-snap-align: start; position: relative; }
+.tcard::before { content: '"'; position: absolute; top: 12px; right: 20px; font-size: 72px; line-height: 1; color: rgba(208,188,255,0.06); font-family: Georgia, serif; }
+.tcard-quote { font-size: 15px; line-height: 1.75; color: var(--on-surface); margin-bottom: 24px; font-style: italic; }
+.tcard-author { display: flex; align-items: center; gap: 14px; }
+.tcard-avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(160,120,255,0.15); border: 1px solid var(--glass-bdr); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.tcard-name { font-weight: 700; font-size: 14px; color: var(--on-surface); }
+.tcard-role { font-size: 12px; color: var(--on-muted); }
+.stars { color: var(--primary); font-size: 13px; margin-bottom: 12px; letter-spacing: 2px; }
+
+/* Footer */
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding: 64px 48px 40px; max-width: 1280px; margin: 0 auto; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 48px; max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.footer-col h4 { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--on-surface); margin-bottom: 16px; }
+.footer-col a { display: block; font-size: 14px; color: var(--on-muted); margin-bottom: 10px; transition: color 0.2s; }
+.footer-col a:hover { color: var(--on-surface); }
+
+@media(max-width: 900px) {
+  .about-grid,.services-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .prc-popular-badge { font-size: 9px; }
+  .nav-links { display: none; }
+  nav { padding: 0 20px; }
+  section { padding: 72px 20px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; padding: 48px 20px 32px; }
+  .trust-bar-inner { gap: 28px; }
+}
+</style>
+</head>
+<body class="mesh-bg slash-overlay">
+
+<nav id="navbar">
+  <img src="./assets/logo.png" alt="Zova Digital Logo" style="height: 36px; width: auto;" />
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#products">Products</a>
+    <a href="#testimonials">Wall of Love</a>
+  </div>
+  <a href="#products" class="btn btn-v" style="padding:10px 22px">Shop Now</a>
+</nav>
+
+<section class="hero fade-up">
+  <div class="pill-badge"><span class="pill-dot"></span>Empowering African Creators</div>
+  <h1>Monetize your craft<br>across the <span class="grad">continent.</span></h1>
+  <p class="hero-sub">Premium digital assets, viral templates, and AI tools built specifically for the African creator economy. Fast, secure, and mobile-money native.</p>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1">
+    <a href="#products" class="btn btn-v" style="padding:18px 42px;font-size:14px">Explore Assets</a>
+    <a href="#about" class="btn btn-out" style="padding:18px 42px;font-size:14px">Our Mission</a>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <div class="marquee-track">
+    <div class="trust-item"><span>Airtel Money</span></div>
+    <div class="trust-item"><span>MTN MoMo</span></div>
+    <div class="trust-item"><span>Zamtel Kwacha</span></div>
+    <div class="trust-item"><span>Lenco BroadPay</span></div>
+    <div class="trust-item"><span>Secured by SSL</span></div>
+    <div class="trust-item"><span>Verified Creator</span></div>
+    <!-- Duplicate for seamless loop -->
+    <div class="trust-item"><span>Airtel Money</span></div>
+    <div class="trust-item"><span>MTN MoMo</span></div>
+    <div class="trust-item"><span>Zamtel Kwacha</span></div>
+    <div class="trust-item"><span>Lenco BroadPay</span></div>
+    <div class="trust-item"><span>Secured by SSL</span></div>
+    <div class="trust-item"><span>Verified Creator</span></div>
+  </div>
+</div>
+
+<section id="about" class="fade-up">
+  <div class="glass-panel" style="padding:80px 60px;border-radius:32px;display:grid;grid-template-columns:1.2fr 0.8fr;gap:60px;align-items:center">
+    <div>
+      <div class="sec-label" style="text-align:left;color:#6d3bd7">The Zova Mission</div>
+      <h2 style="text-align:left;margin-bottom:24px;font-size:42px;line-height:1.1">Bridging the Gap for<br>Digital Entrepreneurs</h2>
+      <p style="color:var(--on-muted);font-size:18px;line-height:1.8;margin-bottom:24px">The African creator economy is exploding, but payment barriers and generic tools hold us back. Zova Digital provides high-performance assets that work for our local context.</p>
+      <p style="color:var(--on-muted);font-size:18px;line-height:1.8;margin-bottom:48px">We don't just sell templates; we build the infrastructure for the next generation of African digital giants. Instantly accessible, locally relevant, and world-class in quality.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+        <div style="background:rgba(255,255,255,0.03);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#d0bcff">2.5k+</div>
+          <div style="font-size:12px;color:var(--on-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px">Assets Sold</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#fbabff">15+</div>
+          <div style="font-size:12px;color:var(--on-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px">Countries</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#adc6ff">24/7</div>
+          <div style="font-size:12px;color:var(--on-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px">Delivery</div>
+        </div>
+      </div>
+    </div>
+    <div style="position:relative;height:100%;min-height:400px;background:url('./assets/man_portrait.png') center/cover;border-radius:24px;border:1px solid rgba(255,255,255,0.1)">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(11,19,38,0.8), transparent)"></div>
+        <div style="position:absolute;bottom:30px;left:30px;right:30px;background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);padding:20px;border-radius:16px;border:1px solid rgba(255,255,255,0.1)">
+            <p style="font-size:14px;font-weight:600;color:#fff">"Technology is the great equalizer. We're here to make sure Africa leads the charge."</p>
+            <p style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:8px">— Team Zova</p>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section id="services" class="fade-up">
+  <div class="sec-label">What We Do</div>
+  <h2>More Than Just a Store</h2>
+  <p class="sec-desc">Beyond our digital assets, we provide dedicated services to help your business thrive in the digital economy.</p>
+  <div class="services-grid">
+    <div class="scard glass-panel fade-up">
+      <div class="scard-icon">💻</div>
+      <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--on-surface)">Web App Development</h3>
+      <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Custom, high-performance web applications built with Next.js, React, and modern backend architectures tailored for African markets.</p>
+    </div>
+    <div class="scard glass-panel fade-up" style="transition-delay:0.1s;position:relative">
+      <div style="position:absolute;top:20px;right:20px;background:rgba(34,197,94,0.1);color:#22C55E;padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.08em">POPULAR</div>
+      <div class="scard-icon">📱</div>
+      <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--on-surface)">Mobile Money Integration</h3>
+      <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Seamlessly integrate Lenco BroadPay or direct telecom APIs into your existing platform to unlock local Zambian sales.</p>
+    </div>
+    <div class="scard glass-panel fade-up" style="transition-delay:0.2s">
+      <div class="scard-icon">🤖</div>
+      <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--on-surface)">AI Prompt Engineering</h3>
+      <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Battle-tested prompt packs for ChatGPT, Midjourney, and Claude — engineered to deliver results for African content creators.</p>
+    </div>
+    <div class="scard glass-panel fade-up" style="transition-delay:0.3s">
+      <div class="scard-icon">🎨</div>
+      <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--on-surface)">Brand Kit Design</h3>
+      <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Professionally designed Canva brand kits and logo systems that make your business look world-class from day one.</p>
+    </div>
+  </div>
+</section>
+
+<section id="products" class="fade-up">
+  <div class="sec-label">Our Catalog</div>
+  <h2>Every Tool You Need to Win</h2>
+  <div class="region-filter-wrapper">
+    <select id="regionSelect" class="region-filter" onchange="updateCurrency()">
+      <option value="ZMW" data-methods="MTN, Airtel, Zamtel">🌍 Zambia (ZMW)</option>
+      <option value="KES" data-methods="M-Pesa, Airtel">🇰🇪 Kenya (KES)</option>
+      <option value="NGN" data-methods="Bank Transfer, Cards">🇳🇬 Nigeria (NGN)</option>
+      <option value="GHS" data-methods="MTN, Vodafone, AirtelTigo">🇬🇭 Ghana (GHS)</option>
+      <option value="UGX" data-methods="MTN, Airtel">🇺🇬 Uganda (UGX)</option>
+    </select>
+    <div id="paymentMethods" class="payment-methods-text">Pay securely with MTN, Airtel, Zamtel. No card needed.</div>
+  </div>
+  <div class="pricing-grid">
+
+        <div class="prc-card glass-panel fade-up featured" style="transition-delay:0.0s">
+            <div class="prc-popular-badge">Bestseller</div>
+            <div class="prc-img-wrapper">
+                <img src="./assets/mockup1.png" class="prc-img" alt="Instagram Growth Blueprint (Zambia Edition) Mockup" onerror="this.src='./assets/man_portrait.png'">
+            </div>
+            <div class="prc-header">
+                <div class="prc-icon">📸</div>
+                <div class="prc-title-group">
+                    <div class="prc-tag">GUIDE</div>
+                    <div class="prc-title">Instagram Growth Blueprint (Zambia Edition)</div>
+                </div>
+            </div>
+            <div class="prc-desc">The exact strategy I used to grow from 0 to 10k followers in 6 months. Tailored for the Zambian algorithm.</div>
+            <div class="prc-price-block">
+                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="149">149</span><span class="prc-period">one-time</span></div>
+            </div>
+            <ul class="prc-features"><li><span class="prc-check">✓</span>10-step growth roadmap</li><li><span class="prc-check">✓</span>Hashtag strategy for Lusaka</li><li><span class="prc-check">✓</span>Content pillar templates</li><li><span class="prc-check">✓</span>Monetisation guide</li></ul>
+            <!-- Fixed product CTAs to include product, price, and currency params -->
+            <button type="button" onclick="goToCheckout('Instagram Growth Blueprint (Zambia Edition)', 149)" class="prc-cta" style="background:linear-gradient(135deg,#a078ff,#e14ef6);color:#fff;box-shadow:0 0 20px rgba(160,120,255,0.35);">Get Instant Access</button>
+        </div>
+    
+        <div class="prc-card glass-panel fade-up " style="transition-delay:0.08s">
+            
+            <div class="prc-img-wrapper">
+                <img src="./assets/mockup2.png" class="prc-img" alt="Viral Reel Hook Library Mockup" onerror="this.src='./assets/man_portrait.png'">
+            </div>
+            <div class="prc-header">
+                <div class="prc-icon">🎥</div>
+                <div class="prc-title-group">
+                    <div class="prc-tag">TEMPLATE</div>
+                    <div class="prc-title">Viral Reel Hook Library</div>
+                </div>
+            </div>
+            <div class="prc-desc">100+ proven hooks and script templates designed to stop the scroll and go viral in Africa.</div>
+            <div class="prc-price-block">
+                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="89">89</span><span class="prc-period">one-time</span></div>
+            </div>
+            <ul class="prc-features"><li><span class="prc-check">✓</span>100+ hook templates</li><li><span class="prc-check">✓</span>Viral script structures</li><li><span class="prc-check">✓</span>Audio trends guide</li><li><span class="prc-check">✓</span>Mobile-first layouts</li></ul>
+            <!-- Fixed product CTAs to include product, price, and currency params -->
+            <button type="button" onclick="goToCheckout('Viral Reel Hook Library', 89)" class="prc-cta" style="background:rgba(255,255,255,0.06);border:1px solid var(--glass-bdr2);color:var(--on-surface);">Get Instant Access</button>
+        </div>
+    
+        <div class="prc-card glass-panel fade-up featured" style="transition-delay:0.16s">
+            <div class="prc-popular-badge">Popular</div>
+            <div class="prc-img-wrapper">
+                <img src="./assets/mockup3.png" class="prc-img" alt="Digital Product Starter Kit Mockup" onerror="this.src='./assets/man_portrait.png'">
+            </div>
+            <div class="prc-header">
+                <div class="prc-icon">🚀</div>
+                <div class="prc-title-group">
+                    <div class="prc-tag">STARTER KIT</div>
+                    <div class="prc-title">Digital Product Starter Kit</div>
+                </div>
+            </div>
+            <div class="prc-desc">Everything you need to launch your first digital product. Includes e-book & course templates.</div>
+            <div class="prc-price-block">
+                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="249">249</span><span class="prc-period">one-time</span></div>
+            </div>
+            <ul class="prc-features"><li><span class="prc-check">✓</span>Canva E-book template</li><li><span class="prc-check">✓</span>Course curriculum builder</li><li><span class="prc-check">✓</span>Pricing spreadsheet</li><li><span class="prc-check">✓</span>Launch email sequence</li></ul>
+            <!-- Fixed product CTAs to include product, price, and currency params -->
+            <button type="button" onclick="goToCheckout('Digital Product Starter Kit', 249)" class="prc-cta" style="background:linear-gradient(135deg,#a078ff,#e14ef6);color:#fff;box-shadow:0 0 20px rgba(160,120,255,0.35);">Get Instant Access</button>
+        </div>
+    
+        <div class="prc-card glass-panel fade-up " style="transition-delay:0.24s">
+            
+            <div class="prc-img-wrapper">
+                <img src="./assets/mockup4.png" class="prc-img" alt="Influencer Media Kit (Canva) Mockup" onerror="this.src='./assets/man_portrait.png'">
+            </div>
+            <div class="prc-header">
+                <div class="prc-icon">📄</div>
+                <div class="prc-title-group">
+                    <div class="prc-tag">DESIGN KIT</div>
+                    <div class="prc-title">Influencer Media Kit (Canva)</div>
+                </div>
+            </div>
+            <div class="prc-desc">Professional, high-converting media kit template to help you land high-paying brand sponsorships.</div>
+            <div class="prc-price-block">
+                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="69">69</span><span class="prc-period">one-time</span></div>
+            </div>
+            <ul class="prc-features"><li><span class="prc-check">✓</span>Fully editable in Canva</li><li><span class="prc-check">✓</span>Rate card section</li><li><span class="prc-check">✓</span>Audience analytics page</li><li><span class="prc-check">✓</span>Past work showcase</li></ul>
+            <!-- Fixed product CTAs to include product, price, and currency params -->
+            <button type="button" onclick="goToCheckout('Influencer Media Kit (Canva)', 69)" class="prc-cta" style="background:rgba(255,255,255,0.06);border:1px solid var(--glass-bdr2);color:var(--on-surface);">Get Instant Access</button>
+        </div>
+    
+        <div class="prc-card glass-panel fade-up " style="transition-delay:0.32s">
+            
+            <div class="prc-img-wrapper">
+                <img src="./assets/mockup5.png" class="prc-img" alt="WhatsApp Sales Machine Mockup" onerror="this.src='./assets/man_portrait.png'">
+            </div>
+            <div class="prc-header">
+                <div class="prc-icon">💬</div>
+                <div class="prc-title-group">
+                    <div class="prc-tag">MASTERCLASS</div>
+                    <div class="prc-title">WhatsApp Sales Machine</div>
+                </div>
+            </div>
+            <div class="prc-desc">How to turn your WhatsApp Status into a 24/7 sales engine without being annoying.</div>
+            <div class="prc-price-block">
+                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="129">129</span><span class="prc-period">one-time</span></div>
+            </div>
+            <ul class="prc-features"><li><span class="prc-check">✓</span>Status selling blueprint</li><li><span class="prc-check">✓</span>Closing scripts</li><li><span class="prc-check">✓</span>Broadcast list secrets</li><li><span class="prc-check">✓</span>Automated replies setup</li></ul>
+            <!-- Fixed product CTAs to include product, price, and currency params -->
+            <button type="button" onclick="goToCheckout('WhatsApp Sales Machine', 129)" class="prc-cta" style="background:rgba(255,255,255,0.06);border:1px solid var(--glass-bdr2);color:var(--on-surface);">Get Instant Access</button>
+        </div>
+    
+        <div class="prc-card glass-panel fade-up featured" style="transition-delay:0.4s">
+            <div class="prc-popular-badge">Popular</div>
+            <div class="prc-img-wrapper">
+                <img src="./assets/mockup6.png" class="prc-img" alt="AI for Content Creators Mockup" onerror="this.src='./assets/man_portrait.png'">
+            </div>
+            <div class="prc-header">
+                <div class="prc-icon">🤖</div>
+                <div class="prc-title-group">
+                    <div class="prc-tag">AI PACK</div>
+                    <div class="prc-title">AI for Content Creators</div>
+                </div>
+            </div>
+            <div class="prc-desc">50+ curated ChatGPT & Gemini prompts to automate your scriptwriting, captions, and idea generation.</div>
+            <div class="prc-price-block">
+                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="59">59</span><span class="prc-period">one-time</span></div>
+            </div>
+            <ul class="prc-features"><li><span class="prc-check">✓</span>Scriptwriter prompts</li><li><span class="prc-check">✓</span>SEO caption generator</li><li><span class="prc-check">✓</span>Niche idea builder</li><li><span class="prc-check">✓</span>Free monthly updates</li></ul>
+            <!-- Fixed product CTAs to include product, price, and currency params -->
+            <button type="button" onclick="goToCheckout('AI for Content Creators', 59)" class="prc-cta" style="background:linear-gradient(135deg,#a078ff,#e14ef6);color:#fff;box-shadow:0 0 20px rgba(160,120,255,0.35);">Get Instant Access</button>
+        </div>
+    
+    </div>
+</section>
+
+<section id="testimonials" class="fade-up">
+  <div class="sec-label">Wall of Love</div>
+  <h2>What Creators Say</h2>
+  <p class="sec-desc">Real stories from Zambian professionals who levelled up with ZOVA Digital.</p>
+  <div class="wall-track">
+    <div class="tcard glass-panel">
+      <div class="stars">★★★★★</div>
+      <p class="tcard-quote">"The Instagram Growth Blueprint changed everything. I went from 200 followers to 5,000 in just two months. The Lusaka hashtag strategy is a game changer!"</p>
+      <div class="tcard-author"><div class="tcard-avatar">🤳🏾</div><div><div class="tcard-name">Chanda M.</div><div class="tcard-role">Influencer, Lusaka</div></div></div>
+    </div>
+    <div class="tcard glass-panel">
+      <div class="stars">★★★★★</div>
+      <p class="tcard-quote">"Finally, high-quality hooks I can actually use. My Reels are getting 10x more views since I started using the Hook Library."</p>
+      <div class="tcard-author"><div class="tcard-avatar">🎥</div><div><div class="tcard-name">Natasha K.</div><div class="tcard-role">Content Creator, Ndola</div></div></div>
+    </div>
+    <div class="tcard glass-panel">
+      <div class="stars">★★★★★</div>
+      <p class="tcard-quote">"The Media Kit template helped me land my first 5,000 ZMW brand deal. It looks so professional!"</p>
+      <div class="tcard-author"><div class="tcard-avatar">💼</div><div><div class="tcard-name">Mwamba T.</div><div class="tcard-role">Digital Nomad, Kitwe</div></div></div>
+    </div>
+    <div class="tcard glass-panel">
+      <div class="stars">★★★★★</div>
+      <p class="tcard-quote">"The WhatsApp Sales Machine course is pure gold. I'm closing deals on my status daily now. Highly recommend!"</p>
+      <div class="tcard-author"><div class="tcard-avatar">💰</div><div><div class="tcard-name">Bupe N.</div><div class="tcard-role">Entrepreneur, Chipata</div></div></div>
+    </div>
+    <div class="tcard glass-panel">
+      <div class="stars">★★★★★</div>
+      <p class="tcard-quote">"The checkout experience was seamless — Airtel money prompt came in 3 seconds. This is the future of Zambian e-commerce."</p>
+      <div class="tcard-author"><div class="tcard-avatar">👨🏾‍🎓</div><div><div class="tcard-name">Kelvin S.</div><div class="tcard-role">Digital Creator, Livingstone</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="fade-up">
+  <div class="glass-panel" style="padding:80px 60px; border-radius:32px; display:grid; grid-template-columns: 1fr 1.2fr; gap:80px; align-items: center;">
+    <div style="position:relative; height:100%; min-height:500px; background:url('./assets/man_portrait.png') center/cover; border-radius:24px; border:1px solid rgba(255,255,255,0.12); box-shadow: 0 24px 80px rgba(0,0,0,0.5)">
+        <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(11,19,38,0.9), transparent)"></div>
+        <div style="position:absolute; bottom:40px; left:30px; right:30px; background:rgba(255,255,255,0.03); backdrop-filter:blur(30px); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.08)">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px">
+                <div style="width:10px; height:10px; border-radius:50%; background:#22C55E; box-shadow:0 0 12px #22C55E"></div>
+                <span style="font-size:12px; font-weight:700; color:#fff; letter-spacing:0.1em; text-transform:uppercase">Expert Support Available</span>
+            </div>
+            <h3 style="font-family:'Manrope',sans-serif; font-size:28px; font-weight:800; color:#fff; margin-bottom:12px; line-height:1.2">Always here for your<br>digital journey</h3>
+            <p style="font-size:15px; color:rgba(255,255,255,0.5); line-height:1.7">From Lusaka to Lagos, we ensure your digital assets are delivered instantly, every single time.</p>
+        </div>
+    </div>
+    <div>
+      <div class="sec-label" style="text-align:left; color:var(--primary); margin-bottom:16px">Intelligent FAQ</div>
+      <h2 style="text-align:left; margin-bottom:40px; font-size:48px; line-height:1.1; letter-spacing:-0.03em">Your Questions,<br><span style="color:var(--primary)">Direct Answers.</span></h2>
+      <div class="faq-grid" style="grid-template-columns: 1fr;">
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">How do I access my digital assets? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Instantly. As soon as your mobile money payment is verified (usually 5-10 seconds), you'll receive an automated SMS and email with your high-speed download link. All files are hosted on premium CDNs for the fastest possible downloads in Africa.</div>
+        </div>
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">Which countries and networks are supported? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">We currently offer native mobile money support for Zambia (Airtel, MTN, Zamtel), Kenya (M-Pesa), Nigeria (Bank & Cards), Ghana, and Uganda. Our infrastructure is powered by Lenco BroadPay for maximum reliability.</div>
+        </div>
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">Is there a limit on downloads? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Absolutely not. Your purchase grants you lifetime access. You can download your files as many times as you need, from any device, forever. We also provide free updates to guides and libraries.</div>
+        </div>
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px;">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">What if my payment doesn't go through? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Don't panic. Our support team is available 24/7. Just hit the WhatsApp help button below, and we'll verify your transaction manually and send your links within minutes. Your satisfaction is our absolute priority.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="support-fab" onclick="window.open('https://wa.me/260970000000', '_blank')">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+  <span>Help</span>
+</div>
+
+<style>
+.support-fab { position: fixed; bottom: 32px; right: 32px; background: #25D366; color: white; padding: 12px 24px; border-radius: 9999px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 12px 32px rgba(37,211,102,0.4); z-index: 1000; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); font-weight: 700; font-size: 14px; }
+.support-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 20px 48px rgba(37,211,102,0.6); }
+@media(max-width: 600px) { .support-fab span { display: none; } .support-fab { padding: 16px; border-radius: 50%; } }
+</style>
+
+<footer style="border-top:1px solid rgba(255,255,255,0.06);background:rgba(6,14,32,0.5)">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <img src="./assets/logo.png" alt="Zova Digital Logo" style="height: 32px; width: auto; margin-bottom: 16px;" />
+      <p style="font-size:14px;color:var(--on-muted);line-height:1.7;margin-bottom:20px">Premium digital assets built for African professionals. Pay securely with mobile money.</p>
+      <p style="font-size:12px;color:var(--outline)">Secured by Lenco BroadPay 🔒</p>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#about">About Us</a>
+      <a href="#services">Services</a>
+      <a href="#products">Products</a>
+      <a href="#testimonials">Reviews</a>
+    </div>
+    <div class="footer-col">
+      <h4>Products</h4>
+      <a href="#products">Growth Blueprint</a>
+      <a href="#products">Reel Hook Library</a>
+      <a href="#products">Media Kit</a>
+      <a href="#products">Starter Kit</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p style="font-size:13px;color:var(--on-muted)">&copy; 2026 ZOVA Digital. All rights reserved.</p>
+    <div style="display:flex;gap:8px">
+      <span style="font-size:12px;color:var(--outline)">Powered by</span>
+      <span style="font-size:12px;font-weight:700;color:var(--on-muted)">Lenco BroadPay</span>
+    </div>
+  </div>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/260" target="_blank" class="glass-panel" style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:200;font-size:24px;box-shadow:0 8px 32px rgba(0,0,0,0.4);border-color:rgba(34,197,94,0.3)">
+  <div style="background:#22C55E;width:12px;height:12px;border-radius:50%;position:absolute;top:2px;right:2px;border:2px solid var(--bg)"></div>
+  💬
+</a>
+
+<script>
+// Scroll animation observer
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+});
+
+// FAQ Toggle
+function toggleFaq(el) {
+    const item = el.parentElement;
+    const isActive = item.classList.contains('active');
+    
+    // Close all others
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+    
+    // Toggle current
+    if (!isActive) item.classList.add('active');
+}
+
+// Regional Currency and Payment Logic
+let currentRates = {
+  'ZMW': 1.0,
+  'KES': 5.0,
+  'NGN': 50.0,
+  'GHS': 0.6,
+  'UGX': 140.0
+};
+
+// Simulated Live Fetch
+async function fetchRates() {
+    try {
+        // In real use: const res = await fetch('https://api.exchangerate-api.com/v4/latest/ZMW');
+        // const data = await res.json();
+        // currentRates = { ...currentRates, ...data.rates };
+        console.log("Rates updated from API (simulated)");
+    } catch (e) {
+        console.log("Using fallback rates");
+    }
+}
+fetchRates();
+
+function updateCurrency() {
+  const select = document.getElementById('regionSelect');
+  const currency = select.value;
+  const methods = select.options[select.selectedIndex].getAttribute('data-methods');
+  const multiplier = currentRates[currency] || 1.0;
+  
+  // Update Payment text
+  document.getElementById('paymentMethods').innerText = `Pay securely with ${methods}. No card needed.`;
+
+  // Update Prices
+  document.querySelectorAll('.price-val').forEach(el => {
+      const basePrice = parseFloat(el.getAttribute('data-base'));
+      el.innerText = (basePrice * multiplier).toFixed(0);
+  });
+  
+  // Update Currency Symbols
+  document.querySelectorAll('.currency-symbol').forEach(el => {
+      el.innerText = currency;
+  });
+}
+
+function goToCheckout(productTitle, basePrice) {
+    const select = document.getElementById('regionSelect');
+    const currency = select.value;
+    const multiplier = currentRates[currency] || 1.0;
+    const finalPrice = (basePrice * multiplier).toFixed(0);
+    window.location.href = `checkout.html?product=${encodeURIComponent(productTitle)}&price=${finalPrice}&currency=${currency}`;
+}
+</script>
+</body>
+</html>
