@@ -141,6 +141,16 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 .footer-col a:hover { color: var(--on-surface); }
 
 @media(max-width: 900px) {
+  .faq-inner {
+    grid-template-columns: 1fr !important;
+    padding: 40px 24px !important;
+    gap: 40px !important;
+  }
+  .about-inner {
+    grid-template-columns: 1fr !important;
+    padding: 40px 24px !important;
+    gap: 32px !important;
+  }
   .about-grid,.services-grid { grid-template-columns: 1fr; }
   .pricing-grid { grid-template-columns: 1fr; }
   .prc-popular-badge { font-size: 9px; }
