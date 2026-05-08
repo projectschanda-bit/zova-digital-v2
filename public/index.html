@@ -144,12 +144,33 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   .about-grid,.services-grid { grid-template-columns: 1fr; }
   .pricing-grid { grid-template-columns: 1fr; }
   .prc-popular-badge { font-size: 9px; }
-  .nav-links { display: none; }
+  .nav-links { 
+    display: none; 
+    position: absolute; 
+    top: 80px; 
+    left: 0; 
+    width: 100%; 
+    background: rgba(11,19,38,0.95); 
+    backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px); 
+    border-bottom: 1px solid var(--glass-bdr); 
+    flex-direction: column; 
+    padding: 20px; 
+    gap: 20px; 
+  }
+  .nav-links.active { display: flex; }
+  .nav-links a { margin-left: 0; text-align: center; font-size: 16px; }
+  .hamburger { display: flex; flex-direction: column; gap: 6px; cursor: pointer; background: none; border: none; padding: 4px; margin-left: 12px; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--on-surface); transition: 0.3s; }
   nav { padding: 0 20px; }
   section { padding: 72px 20px; }
   .footer-grid { grid-template-columns: 1fr 1fr; padding: 48px 20px 32px; }
   .trust-bar-inner { gap: 28px; }
 }
+@media(min-width: 901px) {
+  .hamburger { display: none; }
+}
+.nav-actions { display: flex; align-items: center; }
 
 /* ── Mobile layout fixes for inline-styled sections ── */
 @media(max-width: 768px) {
@@ -200,12 +221,19 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 
 <nav id="navbar">
   <img src="./assets/logo.png" alt="Zova Digital Logo" style="height: 52px; width: auto;" />
-  <div class="nav-links">
-    <a href="#services">Services</a>
-    <a href="#products">Products</a>
-    <a href="#faq">FAQ</a>
+  <div class="nav-links" id="navLinks">
+    <a href="#services" onclick="if(window.innerWidth<=900) toggleMenu()">Services</a>
+    <a href="#products" onclick="if(window.innerWidth<=900) toggleMenu()">Products</a>
+    <a href="#faq" onclick="if(window.innerWidth<=900) toggleMenu()">FAQ</a>
   </div>
-  <a href="#products" class="btn btn-v" style="padding:10px 22px">Shop Now</a>
+  <div class="nav-actions">
+    <a href="#products" class="btn btn-v" style="padding:10px 22px">Shop Now</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
 </nav>
 
 <section class="hero fade-up">
@@ -226,6 +254,12 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     <div class="trust-item"><span>Lenco BroadPay</span></div>
     <div class="trust-item"><span>Secured by SSL</span></div>
     <div class="trust-item"><span>Verified Creator</span></div>
+    <div class="trust-item" aria-hidden="true"><span>Airtel Money</span></div>
+    <div class="trust-item" aria-hidden="true"><span>MTN MoMo</span></div>
+    <div class="trust-item" aria-hidden="true"><span>Zamtel Kwacha</span></div>
+    <div class="trust-item" aria-hidden="true"><span>Lenco BroadPay</span></div>
+    <div class="trust-item" aria-hidden="true"><span>Secured by SSL</span></div>
+    <div class="trust-item" aria-hidden="true"><span>Verified Creator</span></div>
   </div>
 </div>
 
@@ -245,7 +279,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     </div>
     <div class="scard glass-panel fade-up" style="transition-delay:0.1s">
       <div class="scard-img-wrap">
-        <img src="./assets/svc-mobilemoney.png" alt="Mobile Money Integration">
+        <img src="./assets/svc-mobilemoney.jpg" alt="Mobile Money Integration">
         <div style="position:absolute;top:14px;right:14px;z-index:2;background:rgba(34,197,94,0.15);color:#22C55E;padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.08em;border:1px solid rgba(34,197,94,0.3);backdrop-filter:blur(8px)">POPULAR</div>
       </div>
       <div class="scard-body">
@@ -255,7 +289,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     </div>
     <div class="scard glass-panel fade-up" style="transition-delay:0.2s">
       <div class="scard-img-wrap">
-        <img src="./assets/svc-ai.png" alt="AI Prompt Engineering">
+        <img src="./assets/svc-ai.jpg" alt="AI Prompt Engineering">
       </div>
       <div class="scard-body">
         <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--on-surface)">AI Prompt Engineering</h3>
@@ -264,7 +298,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     </div>
     <div class="scard glass-panel fade-up" style="transition-delay:0.3s">
       <div class="scard-img-wrap">
-        <img src="./assets/svc-brandkit.png" alt="Brand Kit Design">
+        <img src="./assets/svc-brandkit.jpg" alt="Brand Kit Design">
       </div>
       <div class="scard-body">
         <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--on-surface)">Brand Kit Design</h3>
@@ -329,31 +363,28 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 </section>
 
 <section id="faq" class="fade-up">
-  <div class="glass-panel faq-inner" style="padding:80px 60px; border-radius:32px; display:grid; grid-template-columns: 1fr 1.2fr; gap:80px; align-items: center;">
-    <div class="faq-visual" style="position:relative; height:100%; min-height:500px; background:url('./assets/man_portrait.png') center/cover; border-radius:24px; border:1px solid rgba(255,255,255,0.12); box-shadow: 0 24px 80px rgba(0,0,0,0.5)">
-        <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(11,19,38,0.9), transparent)"></div>
-        <div style="position:absolute; bottom:40px; left:30px; right:30px; background:rgba(255,255,255,0.03); backdrop-filter:blur(30px); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.08)">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px">
-                <div style="width:10px; height:10px; border-radius:50%; background:#22C55E; box-shadow:0 0 12px #22C55E"></div>
-                <span style="font-size:12px; font-weight:700; color:#fff; letter-spacing:0.1em; text-transform:uppercase">Expert Support Available</span>
-            </div>
-            <h3 style="font-family:'Manrope',sans-serif; font-size:28px; font-weight:800; color:#fff; margin-bottom:12px; line-height:1.2">Always here for your<br>digital journey</h3>
-            <p style="font-size:15px; color:rgba(255,255,255,0.5); line-height:1.7">From Lusaka to Lagos, we ensure your digital assets are delivered instantly, every single time.</p>
-        </div>
+  <div class="sec-label">Intelligent FAQ</div>
+  <h2>Your Questions, <span class="grad">Direct Answers.</span></h2>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do I access my digital assets? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+      <div class="faq-a">Instantly. As soon as your mobile money payment is verified (usually 5-10 seconds), you'll receive an automated SMS and email with your high-speed download link.</div>
     </div>
-    <div>
-      <div class="sec-label" style="text-align:left; color:var(--primary); margin-bottom:16px">Intelligent FAQ</div>
-      <h2 style="text-align:left; margin-bottom:40px; font-size:48px; line-height:1.1; letter-spacing:-0.03em">Your Questions,<br><span style="color:var(--primary)">Direct Answers.</span></h2>
-      <div class="faq-grid" style="grid-template-columns: 1fr;">
-        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
-          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">How do I access my digital assets? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Instantly. As soon as your mobile money payment is verified (usually 5-10 seconds), you'll receive an automated SMS and email with your high-speed download link.</div>
-        </div>
-        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
-          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">Which countries and networks are supported? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">We support Zambia, Kenya, Nigeria, Ghana, and Uganda mobile money networks.</div>
-        </div>
-      </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Which countries and networks are supported? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+      <div class="faq-a">We support Zambia, Kenya, Nigeria, Ghana, and Uganda mobile money networks.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is there a limit on downloads? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+      <div class="faq-a">No! Once purchased, you have lifetime access to your assets. You can download them as many times as you need from your secure dashboard.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What if my payment doesn't go through? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+      <div class="faq-a">Our system auto-retries failed transactions. If the issue persists, our 24/7 expert support team is always available via WhatsApp to resolve any payment delays.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Do you provide refunds? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+      <div class="faq-a">Due to the digital nature of our products, we typically do not offer refunds. However, if you experience technical issues accessing the files, our team will ensure you get what you paid for.</div>
     </div>
   </div>
 </section>
