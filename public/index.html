@@ -153,24 +153,13 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 
 /* ── Mobile layout fixes for inline-styled sections ── */
 @media(max-width: 768px) {
-  /* About + FAQ glass panels: collapse to single column */
-  #about .glass-panel,
-  #faq .glass-panel {
-    display: flex !important;
-    flex-direction: column !important;
+  .about-inner, .faq-inner {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
     padding: 36px 20px !important;
-    gap: 32px !important;
   }
-  /* Reorder FAQ so Q&A comes before image */
-  #faq .glass-panel > div:first-child { order: 2; }
-  #faq .glass-panel > div:last-child  { order: 1; }
-
-  /* Reduce about image height */
-  #about .glass-panel > div:last-child {
-    min-height: 260px !important;
-  }
-  #faq .glass-panel > div:first-child {
-    min-height: 220px !important;
+  .about-visual, .faq-visual {
+    display: none !important;
   }
 
   /* Section headings */
@@ -205,7 +194,6 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   /* Pill badge: smaller on mobile */
   .pill-badge { font-size: 11px; padding: 8px 16px; }
 }
-@media (max-width: 768px) { .about-inner, .faq-inner { grid-template-columns: 1fr !important; gap: 40px !important; } }
 </style>
 </head>
 <body class="mesh-bg slash-overlay">
@@ -215,7 +203,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   <div class="nav-links">
     <a href="#services">Services</a>
     <a href="#products">Products</a>
-    <a href="#testimonials">Wall of Love</a>
+    <a href="#faq">FAQ</a>
   </div>
   <a href="#products" class="btn btn-v" style="padding:10px 22px">Shop Now</a>
 </nav>
@@ -238,17 +226,8 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     <div class="trust-item"><span>Lenco BroadPay</span></div>
     <div class="trust-item"><span>Secured by SSL</span></div>
     <div class="trust-item"><span>Verified Creator</span></div>
-    <!-- Duplicate for seamless loop -->
-    <div class="trust-item"><span>Airtel Money</span></div>
-    <div class="trust-item"><span>MTN MoMo</span></div>
-    <div class="trust-item"><span>Zamtel Kwacha</span></div>
-    <div class="trust-item"><span>Lenco BroadPay</span></div>
-    <div class="trust-item"><span>Secured by SSL</span></div>
-    <div class="trust-item"><span>Verified Creator</span></div>
   </div>
 </div>
-
-
 
 <section id="services" class="fade-up">
   <div class="sec-label">What We Do</div>
@@ -309,7 +288,6 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     <div id="paymentMethods" class="payment-methods-text">Pay securely with MTN, Airtel, Zamtel. No card needed.</div>
   </div>
   <div class="pricing-grid">
-
         <div class="prc-card glass-panel fade-up featured" style="transition-delay:0.0s">
             <div class="prc-popular-badge">Bestseller</div>
             <div class="prc-img-wrapper">
@@ -327,12 +305,9 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
                 <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="149">149</span><span class="prc-period">one-time</span></div>
             </div>
             <ul class="prc-features"><li><span class="prc-check">✓</span>10-step growth roadmap</li><li><span class="prc-check">✓</span>Hashtag strategy for Lusaka</li><li><span class="prc-check">✓</span>Content pillar templates</li><li><span class="prc-check">✓</span>Monetisation guide</li></ul>
-            <!-- Fixed product CTAs to include product, price, and currency params -->
             <button type="button" onclick="goToCheckout('Instagram Growth Blueprint (Zambia Edition)', 149)" class="prc-cta" style="background:linear-gradient(135deg,#a078ff,#e14ef6);color:#fff;box-shadow:0 0 20px rgba(160,120,255,0.35);">Get Instant Access</button>
         </div>
-    
         <div class="prc-card glass-panel fade-up " style="transition-delay:0.08s">
-            
             <div class="prc-img-wrapper">
                 <img src="./assets/mockup2.png" class="prc-img" alt="Viral Reel Hook Library Mockup" onerror="this.src='./assets/man_portrait.png'">
             </div>
@@ -348,178 +323,66 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
                 <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="89">89</span><span class="prc-period">one-time</span></div>
             </div>
             <ul class="prc-features"><li><span class="prc-check">✓</span>100+ hook templates</li><li><span class="prc-check">✓</span>Viral script structures</li><li><span class="prc-check">✓</span>Audio trends guide</li><li><span class="prc-check">✓</span>Mobile-first layouts</li></ul>
-            <!-- Fixed product CTAs to include product, price, and currency params -->
             <button type="button" onclick="goToCheckout('Viral Reel Hook Library', 89)" class="prc-cta" style="background:rgba(255,255,255,0.06);border:1px solid var(--glass-bdr2);color:var(--on-surface);">Get Instant Access</button>
         </div>
-    
-        <div class="prc-card glass-panel fade-up featured" style="transition-delay:0.16s">
-            <div class="prc-popular-badge">Popular</div>
-            <div class="prc-img-wrapper">
-                <img src="./assets/mockup3.png" class="prc-img" alt="Digital Product Starter Kit Mockup" onerror="this.src='./assets/man_portrait.png'">
-            </div>
-            <div class="prc-header">
-                <div class="prc-icon">🚀</div>
-                <div class="prc-title-group">
-                    <div class="prc-tag">STARTER KIT</div>
-                    <div class="prc-title">Digital Product Starter Kit</div>
-                </div>
-            </div>
-            <div class="prc-desc">Everything you need to launch your first digital product. Includes e-book & course templates.</div>
-            <div class="prc-price-block">
-                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="249">249</span><span class="prc-period">one-time</span></div>
-            </div>
-            <ul class="prc-features"><li><span class="prc-check">✓</span>Canva E-book template</li><li><span class="prc-check">✓</span>Course curriculum builder</li><li><span class="prc-check">✓</span>Pricing spreadsheet</li><li><span class="prc-check">✓</span>Launch email sequence</li></ul>
-            <!-- Fixed product CTAs to include product, price, and currency params -->
-            <button type="button" onclick="goToCheckout('Digital Product Starter Kit', 249)" class="prc-cta" style="background:linear-gradient(135deg,#a078ff,#e14ef6);color:#fff;box-shadow:0 0 20px rgba(160,120,255,0.35);">Get Instant Access</button>
-        </div>
-    
-        <div class="prc-card glass-panel fade-up " style="transition-delay:0.24s">
-            
-            <div class="prc-img-wrapper">
-                <img src="./assets/mockup4.png" class="prc-img" alt="Influencer Media Kit (Canva) Mockup" onerror="this.src='./assets/man_portrait.png'">
-            </div>
-            <div class="prc-header">
-                <div class="prc-icon">📄</div>
-                <div class="prc-title-group">
-                    <div class="prc-tag">DESIGN KIT</div>
-                    <div class="prc-title">Influencer Media Kit (Canva)</div>
-                </div>
-            </div>
-            <div class="prc-desc">Professional, high-converting media kit template to help you land high-paying brand sponsorships.</div>
-            <div class="prc-price-block">
-                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="69">69</span><span class="prc-period">one-time</span></div>
-            </div>
-            <ul class="prc-features"><li><span class="prc-check">✓</span>Fully editable in Canva</li><li><span class="prc-check">✓</span>Rate card section</li><li><span class="prc-check">✓</span>Audience analytics page</li><li><span class="prc-check">✓</span>Past work showcase</li></ul>
-            <!-- Fixed product CTAs to include product, price, and currency params -->
-            <button type="button" onclick="goToCheckout('Influencer Media Kit (Canva)', 69)" class="prc-cta" style="background:rgba(255,255,255,0.06);border:1px solid var(--glass-bdr2);color:var(--on-surface);">Get Instant Access</button>
-        </div>
-    
-        <div class="prc-card glass-panel fade-up " style="transition-delay:0.32s">
-            
-            <div class="prc-img-wrapper">
-                <img src="./assets/mockup5.png" class="prc-img" alt="WhatsApp Sales Machine Mockup" onerror="this.src='./assets/man_portrait.png'">
-            </div>
-            <div class="prc-header">
-                <div class="prc-icon">💬</div>
-                <div class="prc-title-group">
-                    <div class="prc-tag">MASTERCLASS</div>
-                    <div class="prc-title">WhatsApp Sales Machine</div>
-                </div>
-            </div>
-            <div class="prc-desc">How to turn your WhatsApp Status into a 24/7 sales engine without being annoying.</div>
-            <div class="prc-price-block">
-                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="129">129</span><span class="prc-period">one-time</span></div>
-            </div>
-            <ul class="prc-features"><li><span class="prc-check">✓</span>Status selling blueprint</li><li><span class="prc-check">✓</span>Closing scripts</li><li><span class="prc-check">✓</span>Broadcast list secrets</li><li><span class="prc-check">✓</span>Automated replies setup</li></ul>
-            <!-- Fixed product CTAs to include product, price, and currency params -->
-            <button type="button" onclick="goToCheckout('WhatsApp Sales Machine', 129)" class="prc-cta" style="background:rgba(255,255,255,0.06);border:1px solid var(--glass-bdr2);color:var(--on-surface);">Get Instant Access</button>
-        </div>
-    
-        <div class="prc-card glass-panel fade-up featured" style="transition-delay:0.4s">
-            <div class="prc-popular-badge">Popular</div>
-            <div class="prc-img-wrapper">
-                <img src="./assets/mockup6.png" class="prc-img" alt="AI for Content Creators Mockup" onerror="this.src='./assets/man_portrait.png'">
-            </div>
-            <div class="prc-header">
-                <div class="prc-icon">🤖</div>
-                <div class="prc-title-group">
-                    <div class="prc-tag">AI PACK</div>
-                    <div class="prc-title">AI for Content Creators</div>
-                </div>
-            </div>
-            <div class="prc-desc">50+ curated ChatGPT & Gemini prompts to automate your scriptwriting, captions, and idea generation.</div>
-            <div class="prc-price-block">
-                <div class="prc-price"><span class="currency-symbol">ZMW</span> <span class="price-val" data-base="59">59</span><span class="prc-period">one-time</span></div>
-            </div>
-            <ul class="prc-features"><li><span class="prc-check">✓</span>Scriptwriter prompts</li><li><span class="prc-check">✓</span>SEO caption generator</li><li><span class="prc-check">✓</span>Niche idea builder</li><li><span class="prc-check">✓</span>Free monthly updates</li></ul>
-            <!-- Fixed product CTAs to include product, price, and currency params -->
-            <button type="button" onclick="goToCheckout('AI for Content Creators', 59)" class="prc-cta" style="background:linear-gradient(135deg,#a078ff,#e14ef6);color:#fff;box-shadow:0 0 20px rgba(160,120,255,0.35);">Get Instant Access</button>
-        </div>
-    
     </div>
 </section>
 
-<section id="testimonials" class="fade-up">
-  <div class="sec-label">Wall of Love</div>
-  <h2>What Creators Say</h2>
-  <p class="sec-desc">Real stories from Zambian professionals who levelled up with ZOVA Digital.</p>
-  <div class="wall-track">
-    <div class="tcard glass-panel">
-      <div class="stars">★★★★★</div>
-      <p class="tcard-quote">"The Instagram Growth Blueprint changed everything. I went from 200 followers to 5,000 in just two months. The Lusaka hashtag strategy is a game changer!"</p>
-      <div class="tcard-author"><div class="tcard-avatar">🤳🏾</div><div><div class="tcard-name">Chanda M.</div><div class="tcard-role">Influencer, Lusaka</div></div></div>
+<section id="faq" class="fade-up">
+  <div class="glass-panel faq-inner" style="padding:80px 60px; border-radius:32px; display:grid; grid-template-columns: 1fr 1.2fr; gap:80px; align-items: center;">
+    <div class="faq-visual" style="position:relative; height:100%; min-height:500px; background:url('./assets/man_portrait.png') center/cover; border-radius:24px; border:1px solid rgba(255,255,255,0.12); box-shadow: 0 24px 80px rgba(0,0,0,0.5)">
+        <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(11,19,38,0.9), transparent)"></div>
+        <div style="position:absolute; bottom:40px; left:30px; right:30px; background:rgba(255,255,255,0.03); backdrop-filter:blur(30px); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.08)">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px">
+                <div style="width:10px; height:10px; border-radius:50%; background:#22C55E; box-shadow:0 0 12px #22C55E"></div>
+                <span style="font-size:12px; font-weight:700; color:#fff; letter-spacing:0.1em; text-transform:uppercase">Expert Support Available</span>
+            </div>
+            <h3 style="font-family:'Manrope',sans-serif; font-size:28px; font-weight:800; color:#fff; margin-bottom:12px; line-height:1.2">Always here for your<br>digital journey</h3>
+            <p style="font-size:15px; color:rgba(255,255,255,0.5); line-height:1.7">From Lusaka to Lagos, we ensure your digital assets are delivered instantly, every single time.</p>
+        </div>
     </div>
-    <div class="tcard glass-panel">
-      <div class="stars">★★★★★</div>
-      <p class="tcard-quote">"Finally, high-quality hooks I can actually use. My Reels are getting 10x more views since I started using the Hook Library."</p>
-      <div class="tcard-author"><div class="tcard-avatar">🎥</div><div><div class="tcard-name">Natasha K.</div><div class="tcard-role">Content Creator, Ndola</div></div></div>
-    </div>
-    <div class="tcard glass-panel">
-      <div class="stars">★★★★★</div>
-      <p class="tcard-quote">"The Media Kit template helped me land my first 5,000 ZMW brand deal. It looks so professional!"</p>
-      <div class="tcard-author"><div class="tcard-avatar">💼</div><div><div class="tcard-name">Mwamba T.</div><div class="tcard-role">Digital Nomad, Kitwe</div></div></div>
-    </div>
-    <div class="tcard glass-panel">
-      <div class="stars">★★★★★</div>
-      <p class="tcard-quote">"The WhatsApp Sales Machine course is pure gold. I'm closing deals on my status daily now. Highly recommend!"</p>
-      <div class="tcard-author"><div class="tcard-avatar">💰</div><div><div class="tcard-name">Bupe N.</div><div class="tcard-role">Entrepreneur, Chipata</div></div></div>
-    </div>
-    <div class="tcard glass-panel">
-      <div class="stars">★★★★★</div>
-      <p class="tcard-quote">"The checkout experience was seamless — Airtel money prompt came in 3 seconds. This is the future of Zambian e-commerce."</p>
-      <div class="tcard-author"><div class="tcard-avatar">👨🏾‍🎓</div><div><div class="tcard-name">Kelvin S.</div><div class="tcard-role">Digital Creator, Livingstone</div></div></div>
+    <div>
+      <div class="sec-label" style="text-align:left; color:var(--primary); margin-bottom:16px">Intelligent FAQ</div>
+      <h2 style="text-align:left; margin-bottom:40px; font-size:48px; line-height:1.1; letter-spacing:-0.03em">Your Questions,<br><span style="color:var(--primary)">Direct Answers.</span></h2>
+      <div class="faq-grid" style="grid-template-columns: 1fr;">
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">How do I access my digital assets? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Instantly. As soon as your mobile money payment is verified (usually 5-10 seconds), you'll receive an automated SMS and email with your high-speed download link.</div>
+        </div>
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">Which countries and networks are supported? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">We support Zambia, Kenya, Nigeria, Ghana, and Uganda mobile money networks.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-
-
-<div class="support-fab" onclick="window.open('https://wa.me/260970000000', '_blank')">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-  <span>Help</span>
-</div>
-
-<style>
-.support-fab { position: fixed; bottom: 32px; right: 32px; background: #25D366; color: white; padding: 12px 24px; border-radius: 9999px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 12px 32px rgba(37,211,102,0.4); z-index: 1000; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); font-weight: 700; font-size: 14px; }
-.support-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 20px 48px rgba(37,211,102,0.6); }
-@media(max-width: 600px) { .support-fab span { display: none; } .support-fab { padding: 16px; border-radius: 50%; } }
-</style>
-
-<footer style="border-top:1px solid rgba(255,255,255,0.06);background:rgba(6,14,32,0.5)">
+<footer style="border-top:1px solid rgba(255,255,255,0.06);background:rgba(6,14,32,0.5);margin-top:96px">
   <div class="footer-grid">
     <div class="footer-col">
       <img src="./assets/logo.png" alt="Zova Digital Logo" style="height: 32px; width: auto; margin-bottom: 16px;" />
       <p style="font-size:14px;color:var(--on-muted);line-height:1.7;margin-bottom:20px">Premium digital assets built for African professionals. Pay securely with mobile money.</p>
-      <p style="font-size:12px;color:var(--outline)">Secured by Lenco BroadPay 🔒</p>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
       <a href="#services">Services</a>
       <a href="#products">Products</a>
-      <a href="#testimonials">Reviews</a>
+      <a href="#faq">FAQ</a>
     </div>
     <div class="footer-col">
       <h4>Products</h4>
       <a href="#products">Growth Blueprint</a>
       <a href="#products">Reel Hook Library</a>
-      <a href="#products">Media Kit</a>
-      <a href="#products">Starter Kit</a>
     </div>
     <div class="footer-col">
       <h4>Support</h4>
-      <a href="#">Contact Us</a>
+      <a href="#faq">Help Center</a>
       <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
     </div>
   </div>
   <div class="footer-bottom">
     <p style="font-size:13px;color:var(--on-muted)">&copy; 2026 ZOVA Digital. All rights reserved.</p>
-    <div style="display:flex;gap:8px">
-      <span style="font-size:12px;color:var(--outline)">Powered by</span>
-      <span style="font-size:12px;font-weight:700;color:var(--on-muted)">Lenco BroadPay</span>
-    </div>
-  </div>
-    </div>
   </div>
 </footer>
 
@@ -529,77 +392,54 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 </a>
 
 <script>
-// Scroll animation observer
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
 }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
-
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-// Navbar scroll effect
 window.addEventListener('scroll', () => {
     const nav = document.getElementById('navbar');
     if (window.scrollY > 50) nav.classList.add('scrolled');
     else nav.classList.remove('scrolled');
 });
 
-// FAQ Toggle
 function toggleFaq(el) {
     const item = el.parentElement;
     const isActive = item.classList.contains('active');
-    
-    // Close all others
     document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
-    
-    // Toggle current
     if (!isActive) item.classList.add('active');
 }
 
-// Regional Currency and Payment Logic
-let currentRates = {
-  'ZMW': 1.0,
-  'KES': 5.0,
-  'NGN': 50.0,
-  'GHS': 0.6,
-  'UGX': 140.0
-};
+let currentRates = { 'ZMW': 1.0, 'KES': 5.0, 'NGN': 50.0, 'GHS': 0.6, 'UGX': 140.0 };
 
-// Simulated Live Fetch
-async function fetchRates() {
+async function fetchLiveRates() {
     try {
-        // In real use: const res = await fetch('https://api.exchangerate-api.com/v4/latest/ZMW');
-        // const data = await res.json();
-        // currentRates = { ...currentRates, ...data.rates };
-        console.log("Rates updated from API (simulated)");
-    } catch (e) {
-        console.log("Using fallback rates");
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/ZMW');
+        const data = await response.json();
+        if (data && data.rates) {
+            currentRates.KES = data.rates.KES || currentRates.KES;
+            currentRates.NGN = data.rates.NGN || currentRates.NGN;
+            currentRates.GHS = data.rates.GHS || currentRates.GHS;
+            currentRates.UGX = data.rates.UGX || currentRates.UGX;
+            updateCurrency();
+        }
+    } catch (error) {
+        console.error('Failed to fetch live exchange rates, using fallback rates.', error);
     }
 }
-fetchRates();
+document.addEventListener('DOMContentLoaded', fetchLiveRates);
 
 function updateCurrency() {
   const select = document.getElementById('regionSelect');
   const currency = select.value;
   const methods = select.options[select.selectedIndex].getAttribute('data-methods');
   const multiplier = currentRates[currency] || 1.0;
-  
-  // Update Payment text
   document.getElementById('paymentMethods').innerText = `Pay securely with ${methods}. No card needed.`;
-
-  // Update Prices
   document.querySelectorAll('.price-val').forEach(el => {
       const basePrice = parseFloat(el.getAttribute('data-base'));
       el.innerText = (basePrice * multiplier).toFixed(0);
   });
-  
-  // Update Currency Symbols
-  document.querySelectorAll('.currency-symbol').forEach(el => {
-      el.innerText = currency;
-  });
+  document.querySelectorAll('.currency-symbol').forEach(el => { el.innerText = currency; });
 }
 
 function goToCheckout(productTitle, basePrice) {
