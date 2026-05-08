@@ -205,6 +205,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   /* Pill badge: smaller on mobile */
   .pill-badge { font-size: 11px; padding: 8px 16px; }
 }
+@media (max-width: 768px) { .about-inner, .faq-inner { grid-template-columns: 1fr !important; gap: 40px !important; } }
 </style>
 </head>
 <body class="mesh-bg slash-overlay">
@@ -249,7 +250,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 </div>
 
 <section id="about" class="fade-up">
-  <div class="glass-panel" style="padding:80px 60px;border-radius:32px;display:grid;grid-template-columns:1.2fr 0.8fr;gap:60px;align-items:center">
+  <div class="glass-panel about-inner" style="padding:80px 60px;border-radius:32px;display:grid;grid-template-columns:1.2fr 0.8fr;gap:60px;align-items:center">
     <div>
       <div class="sec-label" style="text-align:left;color:#6d3bd7">The Zova Mission</div>
       <h2 style="text-align:left;margin-bottom:24px;font-size:42px;line-height:1.1">Bridging the Gap for<br>Digital Entrepreneurs</h2>
@@ -503,7 +504,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 </section>
 
 <section id="faq" class="fade-up">
-  <div class="glass-panel" style="padding:80px 60px; border-radius:32px; display:grid; grid-template-columns: 1fr 1.2fr; gap:80px; align-items: center;">
+  <div class="glass-panel faq-inner" style="padding:80px 60px; border-radius:32px; display:grid; grid-template-columns: 1fr 1.2fr; gap:80px; align-items: center;">
     <div style="position:relative; height:100%; min-height:500px; background:url('./assets/man_portrait.png') center/cover; border-radius:24px; border:1px solid rgba(255,255,255,0.12); box-shadow: 0 24px 80px rgba(0,0,0,0.5)">
         <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(11,19,38,0.9), transparent)"></div>
         <div style="position:absolute; bottom:40px; left:30px; right:30px; background:rgba(255,255,255,0.03); backdrop-filter:blur(30px); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.08)">
