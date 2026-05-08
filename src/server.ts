@@ -20,17 +20,31 @@ const PRODUCT_MAP: Record<string, string> = {
   'AI for Content Creators': 'AIPromptPack.pdf',
 };
 
+// Lenco operator slugs — must match Lenco's expected values per currency
+const OPERATOR_MAP: Record<string, Record<string, string>> = {
+  ZMW: { mtn: 'mtn', airtel: 'airtel', zamtel: 'zamtel' },
+  KES: { safaricom: 'safaricom', airtel: 'airtel' },
+  NGN: { mtn: 'mtn', airtel: 'airtel', glo: 'glo', '9mobile': '9mobile' },
+  GHS: { mtn: 'mtn', airtel: 'airtel-tigo', vodafone: 'vodafone' },
+  UGX: { mtn: 'mtn', airtel: 'airtel' },
+};
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Phone normalizer
-function normalizePhone(phone: string): string {
-  phone = phone.replace(/\s+/g, '');
-  if (phone.startsWith('+260')) return '0' + phone.substring(4);
-  if (phone.startsWith('260') && phone.length === 12) return '0' + phone.substring(3);
-  if (phone.length === 9 && phone.startsWith('9')) return '0' + phone;
+// Phone normalizer — handles ZMW, KES, NGN, GHS, UGX
+function normalizePhone(phone: string, currency = 'ZMW'): string {
+  phone = phone.replace(/[\s\-\(\)]/g, '');
+  if (phone.startsWith('+')) phone = phone.substring(1);
+
+  const countryCodes: Record<string, string> = {
+    ZMW: '260', KES: '254', NGN: '234', GHS: '233', UGX: '256',
+  };
+  const cc = countryCodes[currency] || '';
+  if (cc && phone.startsWith(cc)) phone = '0' + phone.substring(cc.length);
+  if (phone.length === 9 && !phone.startsWith('0')) phone = '0' + phone;
   return phone;
 }
 
@@ -49,9 +63,12 @@ app.post('/api/pay', async (req: Request, res: Response) => {
     return;
   }
 
-  const phone = normalizePhone(String(rawPhone));
-  const operator = network.toLowerCase();
+  const phone    = normalizePhone(String(rawPhone), currency);
+  const rawOp    = network.toLowerCase();
+  const operator = (OPERATOR_MAP[currency] || {})[rawOp] || rawOp; // fallback to raw
   const reference = `PAY-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+
+  console.log(`[Pay] phone=${phone} op=${operator} currency=${currency} amount=${amount}`);
 
   const lencoPayload = {
     amount: parseFloat(String(amount)),
@@ -59,11 +76,11 @@ app.post('/api/pay', async (req: Request, res: Response) => {
     operator,
     phone,
     reference,
-    bearer: 'customer',
+    bearer: 'merchant',
   };
 
   try {
-    const lencoRes = await fetch(`${LENCO_BASE_URL}/collections`, {
+    const lencoRes = await fetch(`${LENCO_BASE_URL}/collections/mobile-money`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${LENCO_API_KEY}`,
@@ -78,12 +95,33 @@ app.post('/api/pay', async (req: Request, res: Response) => {
       data?: { id?: string };
     };
 
-    if (lencoRes.ok && responseData.status === true) {
-      const txnId = responseData.data?.id || reference;
+    console.log('[Lenco /pay response]', JSON.stringify(responseData));
+
+    const txnData    = (responseData.data || {}) as any;
+    const txnId      = txnData.id as string | undefined;
+    const initStatus = (txnData.status || '').toUpperCase() as string;
+    const reason     = txnData.reasonForFailure as string | undefined;
+
+    console.log(`[Pay] txnId=${txnId} initStatus=${initStatus} reason=${reason || 'none'}`);
+
+    if (txnId && initStatus === 'FAILED') {
+      // Transaction failed at initiation (e.g. insufficient funds, wrong PIN)
+      res.json({
+        success: false,
+        message: reason || 'Payment failed. Please check your balance and try again.',
+        immediate: true,
+      });
+    } else if (txnId && initStatus !== 'CANCELLED') {
+      // Genuinely pending — start polling
       transactionStore.set(txnId, product || 'Digital Asset');
       res.json({ success: true, transaction_id: txnId });
+    } else if (lencoRes.ok && responseData.status === true) {
+      transactionStore.set(reference, product || 'Digital Asset');
+      res.json({ success: true, transaction_id: reference });
     } else {
-      res.json({ success: false, message: responseData.message || 'Payment initiation failed.' });
+      const errMsg = responseData.message || 'Unable to initiate payment. Check your number and try again.';
+      console.error('[Lenco rejection]', responseData);
+      res.json({ success: false, message: errMsg, errorCode: (responseData as any).errorCode });
     }
   } catch (err) {
     console.error('Lenco /api/pay error:', err);

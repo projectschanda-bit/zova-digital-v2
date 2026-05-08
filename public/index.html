@@ -113,10 +113,13 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 
 /* Services */
 .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.scard { padding: 36px; border-radius: 16px; transition: transform 0.3s, border-color 0.3s; position: relative; overflow: hidden; }
+.scard { border-radius: 16px; transition: transform 0.3s, border-color 0.3s; position: relative; overflow: hidden; padding: 0; display: flex; flex-direction: column; }
 .scard:hover { transform: translateY(-6px); }
-.scard::before { content: ''; position: absolute; top: 0; right: 0; width: 40%; height: 40%; background: radial-gradient(circle, rgba(160,120,255,0.1), transparent); pointer-events: none; }
-.scard-icon { width: 56px; height: 56px; border-radius: 14px; background: rgba(160,120,255,0.1); border: 1px solid rgba(160,120,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
+.scard-img-wrap { position: relative; width: 100%; height: 200px; overflow: hidden; flex-shrink: 0; }
+.scard-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block; }
+.scard:hover .scard-img-wrap img { transform: scale(1.06); }
+.scard-img-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 35%, rgba(11,19,38,0.88) 100%); pointer-events: none; }
+.scard-body { padding: 26px 30px 30px; flex: 1; }
 
 /* Testimonials */
 .wall-track { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 16px; scroll-snap-type: x mandatory; -ms-overflow-style: none; scrollbar-width: none; }
@@ -147,12 +150,67 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   .footer-grid { grid-template-columns: 1fr 1fr; padding: 48px 20px 32px; }
   .trust-bar-inner { gap: 28px; }
 }
+
+/* ── Mobile layout fixes for inline-styled sections ── */
+@media(max-width: 768px) {
+  /* About + FAQ glass panels: collapse to single column */
+  #about .glass-panel,
+  #faq .glass-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 36px 20px !important;
+    gap: 32px !important;
+  }
+  /* Reorder FAQ so Q&A comes before image */
+  #faq .glass-panel > div:first-child { order: 2; }
+  #faq .glass-panel > div:last-child  { order: 1; }
+
+  /* Reduce about image height */
+  #about .glass-panel > div:last-child {
+    min-height: 260px !important;
+  }
+  #faq .glass-panel > div:first-child {
+    min-height: 220px !important;
+  }
+
+  /* Section headings */
+  #about .glass-panel h2 { font-size: 26px !important; }
+  #faq   .glass-panel h2 { font-size: 28px !important; }
+
+  /* Stats row: smaller font so 3 cols still fit */
+  #about .glass-panel > div:first-child > div:last-child > div {
+    padding: 16px 10px !important;
+  }
+  #about .glass-panel > div:first-child > div:last-child > div > div:first-child {
+    font-size: 24px !important;
+  }
+
+  /* Footer bottom row */
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  /* Hero */
+  .hero { padding: 100px 20px 60px; }
+
+  /* Testimonial cards: prevent 340px card overflowing narrow screens */
+  .tcard { flex: 0 0 min(340px, calc(100vw - 40px)); }
+
+  /* Nav logo: shrink on small screens */
+  nav img { height: 38px !important; }
+
+  /* Pill badge: smaller on mobile */
+  .pill-badge { font-size: 11px; padding: 8px 16px; }
+}
 </style>
 </head>
 <body class="mesh-bg slash-overlay">
 
 <nav id="navbar">
-  <img src="./assets/logo.png" alt="Zova Digital Logo" style="height: 36px; width: auto;" />
+  <img src="./assets/logo.png" alt="Zova Digital Logo" style="height: 52px; width: auto;" />
   <div class="nav-links">
     <a href="#about">About</a>
     <a href="#services">Services</a>
@@ -228,25 +286,41 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   <p class="sec-desc">Beyond our digital assets, we provide dedicated services to help your business thrive in the digital economy.</p>
   <div class="services-grid">
     <div class="scard glass-panel fade-up">
-      <div class="scard-icon">💻</div>
-      <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--on-surface)">Web App Development</h3>
-      <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Custom, high-performance web applications built with Next.js, React, and modern backend architectures tailored for African markets.</p>
+      <div class="scard-img-wrap">
+        <img src="./assets/svc-webdev.jpg" alt="Web App Development">
+      </div>
+      <div class="scard-body">
+        <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--on-surface)">Web App Development</h3>
+        <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Custom, high-performance web applications built with Next.js, React, and modern backend architectures tailored for African markets.</p>
+      </div>
     </div>
-    <div class="scard glass-panel fade-up" style="transition-delay:0.1s;position:relative">
-      <div style="position:absolute;top:20px;right:20px;background:rgba(34,197,94,0.1);color:#22C55E;padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.08em">POPULAR</div>
-      <div class="scard-icon">📱</div>
-      <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--on-surface)">Mobile Money Integration</h3>
-      <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Seamlessly integrate Lenco BroadPay or direct telecom APIs into your existing platform to unlock local Zambian sales.</p>
+    <div class="scard glass-panel fade-up" style="transition-delay:0.1s">
+      <div class="scard-img-wrap">
+        <img src="./assets/svc-mobilemoney.jpg" alt="Mobile Money Integration">
+        <div style="position:absolute;top:14px;right:14px;z-index:2;background:rgba(34,197,94,0.15);color:#22C55E;padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.08em;border:1px solid rgba(34,197,94,0.3);backdrop-filter:blur(8px)">POPULAR</div>
+      </div>
+      <div class="scard-body">
+        <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--on-surface)">Mobile Money Integration</h3>
+        <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Seamlessly integrate Lenco BroadPay or direct telecom APIs into your existing platform to unlock local Zambian sales.</p>
+      </div>
     </div>
     <div class="scard glass-panel fade-up" style="transition-delay:0.2s">
-      <div class="scard-icon">🤖</div>
-      <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--on-surface)">AI Prompt Engineering</h3>
-      <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Battle-tested prompt packs for ChatGPT, Midjourney, and Claude — engineered to deliver results for African content creators.</p>
+      <div class="scard-img-wrap">
+        <img src="./assets/svc-ai.jpg" alt="AI Prompt Engineering">
+      </div>
+      <div class="scard-body">
+        <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--on-surface)">AI Prompt Engineering</h3>
+        <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Battle-tested prompt packs for ChatGPT, Midjourney, and Claude — engineered to deliver results for African content creators.</p>
+      </div>
     </div>
     <div class="scard glass-panel fade-up" style="transition-delay:0.3s">
-      <div class="scard-icon">🎨</div>
-      <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--on-surface)">Brand Kit Design</h3>
-      <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Professionally designed Canva brand kits and logo systems that make your business look world-class from day one.</p>
+      <div class="scard-img-wrap">
+        <img src="./assets/svc-brandkit.jpg" alt="Brand Kit Design">
+      </div>
+      <div class="scard-body">
+        <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--on-surface)">Brand Kit Design</h3>
+        <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Professionally designed Canva brand kits and logo systems that make your business look world-class from day one.</p>
+      </div>
     </div>
   </div>
 </section>
