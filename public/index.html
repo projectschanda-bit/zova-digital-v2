@@ -108,8 +108,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 .prc-cta { display: block; width: 100%; text-align: center; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.3s; margin-top: auto; }
 
 /* About */
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-.about-visual { border-radius: 20px; overflow: hidden; min-height: 320px; background: linear-gradient(135deg, rgba(160,120,255,0.15), rgba(225,78,246,0.1)); border: 1px solid var(--glass-bdr); display: flex; align-items: center; justify-content: center; font-size: 80px; }
+.about-inner { max-width: 900px; margin: 0 auto; }
 
 /* Services */
 .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -142,17 +141,11 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 
 @media(max-width: 900px) {
   .faq-inner {
-    grid-template-columns: 1fr !important;
     padding: 40px 24px !important;
-    gap: 40px !important;
   }
-  .faq-inner .faq-image-container { display: none; }
   .about-inner {
-    grid-template-columns: 1fr !important;
     padding: 40px 24px !important;
-    gap: 32px !important;
   }
-  .about-portrait { display: none; }
   .about-grid,.services-grid { grid-template-columns: 1fr; }
   .pricing-grid { grid-template-columns: 1fr; }
   .prc-popular-badge { font-size: 9px; }
@@ -173,27 +166,16 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     padding: 36px 20px !important;
     gap: 32px !important;
   }
-  /* Reorder FAQ so Q&A comes before image */
-  #faq .glass-panel > div:first-child { order: 2; }
-  #faq .glass-panel > div:last-child  { order: 1; }
-
-  /* Reduce about image height */
-  #about .glass-panel > div:last-child {
-    min-height: 260px !important;
-  }
-  #faq .glass-panel > div:first-child {
-    min-height: 220px !important;
-  }
 
   /* Section headings */
   #about .glass-panel h2 { font-size: 26px !important; }
   #faq   .glass-panel h2 { font-size: 28px !important; }
 
   /* Stats row: smaller font so 3 cols still fit */
-  #about .glass-panel > div:first-child > div:last-child > div {
+  #about .glass-panel .stats-container > div {
     padding: 16px 10px !important;
   }
-  #about .glass-panel > div:first-child > div:last-child > div > div:first-child {
+  #about .glass-panel .stats-container > div > div:first-child {
     font-size: 24px !important;
   }
 
@@ -262,33 +244,28 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 </div>
 
 <section id="about" class="fade-up">
-  <div class="glass-panel about-inner" style="padding:80px 60px;border-radius:32px;display:grid;grid-template-columns:1.2fr 0.8fr;gap:60px;align-items:center">
-    <div>
-      <div class="sec-label" style="text-align:left;color:#6d3bd7">The Zova Mission</div>
-      <h2 style="text-align:left;margin-bottom:24px;font-size:42px;line-height:1.1">Bridging the Gap for<br>Digital Entrepreneurs</h2>
-      <p style="color:var(--on-muted);font-size:18px;line-height:1.8;margin-bottom:24px">The African creator economy is exploding, but payment barriers and generic tools hold us back. Zova Digital provides high-performance assets that work for our local context.</p>
-      <p style="color:var(--on-muted);font-size:18px;line-height:1.8;margin-bottom:48px">We don't just sell templates; we build the infrastructure for the next generation of African digital giants. Instantly accessible, locally relevant, and world-class in quality.</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
-        <div style="background:rgba(255,255,255,0.03);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#d0bcff">2.5k+</div>
-          <div style="font-size:12px;color:var(--on-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px">Assets Sold</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.03);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#fbabff">15+</div>
-          <div style="font-size:12px;color:var(--on-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px">Countries</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.03);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.06)">
-          <div style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#adc6ff">24/7</div>
-          <div style="font-size:12px;color:var(--on-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px">Delivery</div>
-        </div>
-      </div>
+  <div class="glass-panel about-inner" style="padding:80px 40px; border-radius:32px; max-width: 900px; margin: 0 auto; text-align: center;">
+    <div class="sec-label" style="color:var(--primary); margin-bottom: 20px;">The Zova Mission</div>
+    <h2 style="margin-bottom:32px; font-size:clamp(32px, 5vw, 48px); line-height:1.1; letter-spacing: -0.02em;">Bridging the Gap for<br><span class="grad">Digital Entrepreneurs.</span></h2>
+    
+    <div style="display: flex; flex-direction: column; gap: 24px; max-width: 720px; margin: 0 auto 56px;">
+        <p style="color:var(--on-muted); font-size:18px; line-height:1.8;">The African creator economy is exploding, but payment barriers and generic tools hold us back. Zova Digital provides high-performance assets that work for our local context.</p>
+        <p style="color:var(--on-muted); font-size:18px; line-height:1.8;">We don't just sell templates; we build the infrastructure for the next generation of African digital giants. Instantly accessible, locally relevant, and world-class in quality.</p>
     </div>
-    <div class="about-portrait" style="position:relative;height:100%;min-height:400px;background:url('./assets/man_portrait.png') center/cover;border-radius:24px;border:1px solid rgba(255,255,255,0.1)">
-        <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(11,19,38,0.8), transparent)"></div>
-        <div style="position:absolute;bottom:30px;left:30px;right:30px;background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);padding:20px;border-radius:16px;border:1px solid rgba(255,255,255,0.1)">
-            <p style="font-size:14px;font-weight:600;color:#fff">"Technology is the great equalizer. We're here to make sure Africa leads the charge."</p>
-            <p style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:8px">— Team Zova</p>
-        </div>
+
+    <div class="stats-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:24px; margin-top: 40px;">
+      <div style="background:rgba(255,255,255,0.02); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s ease;">
+        <div style="font-family:'Manrope',sans-serif; font-size:40px; font-weight:800; color:#d0bcff; margin-bottom: 8px;">2.5k+</div>
+        <div style="font-size:11px; color:var(--on-muted); text-transform:uppercase; letter-spacing:0.1em;">Assets Sold</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s ease;">
+        <div style="font-family:'Manrope',sans-serif; font-size:40px; font-weight:800; color:#fbabff; margin-bottom: 8px;">15+</div>
+        <div style="font-size:11px; color:var(--on-muted); text-transform:uppercase; letter-spacing:0.1em;">Countries</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s ease;">
+        <div style="font-family:'Manrope',sans-serif; font-size:40px; font-weight:800; color:#adc6ff; margin-bottom: 8px;">24/7</div>
+        <div style="font-size:11px; color:var(--on-muted); text-transform:uppercase; letter-spacing:0.1em;">Delivery</div>
+      </div>
     </div>
   </div>
 </section>
@@ -522,38 +499,29 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 </section>
 
 <section id="faq" class="fade-up">
-  <div class="glass-panel faq-inner" style="padding:80px 60px; border-radius:32px; display:grid; grid-template-columns: 1fr 1.2fr; gap:80px; align-items: center;">
-    <div class="faq-image-container" style="position:relative; height:100%; min-height:500px; background:url('./assets/man_portrait.png') center/cover; border-radius:24px; border:1px solid rgba(255,255,255,0.12); box-shadow: 0 24px 80px rgba(0,0,0,0.5)">
-        <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(11,19,38,0.9), transparent)"></div>
-        <div style="position:absolute; bottom:40px; left:30px; right:30px; background:rgba(255,255,255,0.03); backdrop-filter:blur(30px); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.08)">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px">
-                <div style="width:10px; height:10px; border-radius:50%; background:#22C55E; box-shadow:0 0 12px #22C55E"></div>
-                <span style="font-size:12px; font-weight:700; color:#fff; letter-spacing:0.1em; text-transform:uppercase">Expert Support Available</span>
-            </div>
-            <h3 style="font-family:'Manrope',sans-serif; font-size:28px; font-weight:800; color:#fff; margin-bottom:12px; line-height:1.2">Always here for your<br>digital journey</h3>
-            <p style="font-size:15px; color:rgba(255,255,255,0.5); line-height:1.7">From Lusaka to Lagos, we ensure your digital assets are delivered instantly, every single time.</p>
-        </div>
+  <div class="glass-panel faq-inner" style="padding:80px 40px; border-radius:32px; max-width: 900px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 64px;">
+      <div class="sec-label" style="color:var(--primary); margin-bottom:16px">Intelligent FAQ</div>
+      <h2 style="margin-bottom:24px; font-size:clamp(32px, 5vw, 48px); line-height:1.1; letter-spacing:-0.03em">Your Questions,<br><span class="grad">Direct Answers.</span></h2>
+      <p style="color:var(--on-muted); font-size:16px; max-width: 500px; margin: 0 auto;">Quick answers to common questions about our assets and payments.</p>
     </div>
-    <div>
-      <div class="sec-label" style="text-align:left; color:var(--primary); margin-bottom:16px">Intelligent FAQ</div>
-      <h2 style="text-align:left; margin-bottom:40px; font-size:48px; line-height:1.1; letter-spacing:-0.03em">Your Questions,<br><span style="color:var(--primary)">Direct Answers.</span></h2>
-      <div class="faq-grid" style="grid-template-columns: 1fr;">
-        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
-          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">How do I access my digital assets? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Instantly. As soon as your mobile money payment is verified (usually 5-10 seconds), you'll receive an automated SMS and email with your high-speed download link. All files are hosted on premium CDNs for the fastest possible downloads in Africa.</div>
-        </div>
-        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
-          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">Which countries and networks are supported? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">We currently offer native mobile money support for Zambia (Airtel, MTN, Zamtel), Kenya (M-Pesa), Nigeria (Bank & Cards), Ghana, and Uganda. Our infrastructure is powered by Lenco BroadPay for maximum reliability.</div>
-        </div>
-        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
-          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">Is there a limit on downloads? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Absolutely not. Your purchase grants you lifetime access. You can download your files as many times as you need, from any device, forever. We also provide free updates to guides and libraries.</div>
-        </div>
-        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px;">
-          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">What if my payment doesn't go through? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Don't panic. Our support team is available 24/7. Just hit the WhatsApp help button below, and we'll verify your transaction manually and send your links within minutes. Your satisfaction is our absolute priority.</div>
-        </div>
+    
+    <div class="faq-grid" style="grid-template-columns: 1fr; max-width: 720px; margin: 0 auto;">
+      <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+        <div class="faq-q" onclick="toggleFaq(this)" style="padding:24px 28px; font-size:17px; font-weight:600">How do I access my digital assets? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+        <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Instantly. As soon as your mobile money payment is verified (usually 5-10 seconds), you'll receive an automated SMS and email with your high-speed download link.</div>
+      </div>
+      <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+        <div class="faq-q" onclick="toggleFaq(this)" style="padding:24px 28px; font-size:17px; font-weight:600">Which countries and networks are supported? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+        <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">We currently offer native mobile money support for Zambia (Airtel, MTN, Zamtel), Kenya (M-Pesa), Nigeria (Bank & Cards), Ghana, and Uganda.</div>
+      </div>
+      <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+        <div class="faq-q" onclick="toggleFaq(this)" style="padding:24px 28px; font-size:17px; font-weight:600">Is there a limit on downloads? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+        <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Absolutely not. Your purchase grants you lifetime access. You can download your files as many times as you need, from any device, forever.</div>
+      </div>
+      <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px;">
+        <div class="faq-q" onclick="toggleFaq(this)" style="padding:24px 28px; font-size:17px; font-weight:600">What if my payment doesn't go through? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+        <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Don't panic. Our support team is available 24/7. Just hit the WhatsApp help button below, and we'll verify your transaction manually.</div>
       </div>
     </div>
   </div>
@@ -604,8 +572,6 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     <div style="display:flex;gap:8px">
       <span style="font-size:12px;color:var(--outline)">Powered by</span>
       <span style="font-size:12px;font-weight:700;color:var(--on-muted)">Lenco BroadPay</span>
-    </div>
-  </div>
     </div>
   </div>
 </footer>
