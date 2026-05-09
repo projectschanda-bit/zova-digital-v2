@@ -36,7 +36,6 @@ button, a { cursor: pointer; font-family: inherit; text-decoration: none; }
 .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
 .fade-up.visible { opacity: 1; transform: none; }
 
-body { font-family: 'Inter', sans-serif; }
 h1,h2,h3,.brand { font-family: 'Manrope', sans-serif; }
 
 /* Nav */
@@ -199,7 +198,11 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   /* Pill badge: smaller on mobile */
   .pill-badge { font-size: 11px; padding: 8px 16px; }
 }
-@media (max-width: 768px) { .about-inner, .faq-inner { grid-template-columns: 1fr !important; gap: 40px !important; } }
+
+/* Support FAB */
+.support-fab { position: fixed; bottom: 32px; right: 32px; background: #25D366; color: white; padding: 12px 24px; border-radius: 9999px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 12px 32px rgba(37,211,102,0.4); z-index: 1000; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); font-weight: 700; font-size: 14px; }
+.support-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 20px 48px rgba(37,211,102,0.6); }
+@media(max-width: 600px) { .support-fab span { display: none; } .support-fab { padding: 16px; border-radius: 50%; } }
 </style>
 </head>
 <body class="mesh-bg slash-overlay">
@@ -531,12 +534,6 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
   <span>Help</span>
 </div>
-
-<style>
-.support-fab { position: fixed; bottom: 32px; right: 32px; background: #25D366; color: white; padding: 12px 24px; border-radius: 9999px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 12px 32px rgba(37,211,102,0.4); z-index: 1000; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); font-weight: 700; font-size: 14px; }
-.support-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 20px 48px rgba(37,211,102,0.6); }
-@media(max-width: 600px) { .support-fab span { display: none; } .support-fab { padding: 16px; border-radius: 50%; } }
-</style>
 
 <footer style="border-top:1px solid rgba(255,255,255,0.06);background:rgba(6,14,32,0.5)">
   <div class="footer-grid">

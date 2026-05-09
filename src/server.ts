@@ -3,21 +3,31 @@ import cors from 'cors';
 import path from 'path';
 import crypto from 'crypto';
 import * as dotenv from 'dotenv';
+import * as admin from 'firebase-admin';
+
 dotenv.config();
+
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string);
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  projectId: 'zova-digital-94458'
+});
+
+const db = admin.firestore();
 
 const app = express();
 
 const LENCO_API_KEY: string = process.env.LENCO_SECRET_KEY || '';
 const LENCO_BASE_URL: string = process.env.LENCO_BASE_URL || 'https://api.lenco.co/access/v2';
-const transactionStore = new Map<string, string>();
 
-const PRODUCT_MAP: Record<string, string> = {
-  'Instagram Growth Blueprint (Zambia Edition)': 'GrowthBlueprint.pdf',
-  'Viral Reel Hook Library': 'ViralHookLibrary.pdf',
-  'Digital Product Starter Kit': 'StarterKit.pdf',
-  'Influencer Media Kit (Canva)': 'MediaKit.pdf',
-  'WhatsApp Sales Machine': 'SalesMachine.pdf',
-  'AI for Content Creators': 'AIPromptPack.pdf',
+const PRODUCT_CATALOG: Record<string, { price: number; file: string }> = {
+  'Instagram Growth Blueprint (Zambia Edition)': { price: 4500.00, file: 'GrowthBlueprint.pdf' },
+  'Viral Reel Hook Library': { price: 4500.00, file: 'ViralHookLibrary.pdf' },
+  'Digital Product Starter Kit': { price: 4500.00, file: 'StarterKit.pdf' },
+  'Influencer Media Kit (Canva)': { price: 4500.00, file: 'MediaKit.pdf' },
+  'WhatsApp Sales Machine': { price: 4500.00, file: 'SalesMachine.pdf' },
+  'AI for Content Creators': { price: 4500.00, file: 'AIPromptPack.pdf' },
 };
 
 // Lenco operator slugs — must match Lenco's expected values per currency
@@ -39,47 +49,61 @@ function normalizePhone(phone: string, currency = 'ZMW'): string {
   phone = phone.replace(/[\s\-\(\)]/g, '');
   if (phone.startsWith('+')) phone = phone.substring(1);
 
-  const countryCodes: Record<string, string> = {
-    ZMW: '260', KES: '254', NGN: '234', GHS: '233', UGX: '256',
-  };
-  const cc = countryCodes[currency] || '';
-  if (cc && phone.startsWith(cc)) phone = '0' + phone.substring(cc.length);
-  if (phone.length === 9 && !phone.startsWith('0')) phone = '0' + phone;
-  return phone;
+    const countryCodes: Record<string, string> = {
+      ZMW: '260', KES: '254', NGN: '234', GHS: '233', UGX: '256',
+    };
+    const countryCodePrefix = countryCodes[currency] || '';
+    if (countryCodePrefix && phone.startsWith(countryCodePrefix)) phone = '0' + phone.substring(countryCodePrefix.length);
+    if (phone.length === 9 && !phone.startsWith('0')) phone = '0' + phone;
+    return phone;
 }
 
 // POST /api/pay
 app.post('/api/pay', async (req: Request, res: Response) => {
-  const { phone: rawPhone, amount, currency, network, product } = req.body as {
-    phone: string;
-    amount: number;
-    currency: string;
-    network: string;
-    product: string;
-  };
-
-  if (!rawPhone || !amount || !network) {
-    res.status(400).json({ success: false, message: 'phone, amount, and network are required.' });
-    return;
-  }
-
-  const phone    = normalizePhone(String(rawPhone), currency);
-  const rawOp    = network.toLowerCase();
-  const operator = (OPERATOR_MAP[currency] || {})[rawOp] || rawOp; // fallback to raw
-  const reference = `PAY-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
-
-  console.log(`[Pay] phone=${phone} op=${operator} currency=${currency} amount=${amount}`);
-
-  const lencoPayload = {
-    amount: parseFloat(String(amount)),
-    currency,
-    operator,
-    phone,
-    reference,
-    bearer: 'merchant',
-  };
-
   try {
+    const { phone: rawPhone, currency, network, product } = req.body as {
+      phone: string;
+      currency: string;
+      network: string;
+      product: string;
+    };
+
+    if (!rawPhone || !network || !product) {
+      res.status(400).json({ success: false, message: 'phone, network, and product are required.' });
+      return;
+    }
+
+    const productInfo = PRODUCT_CATALOG[product];
+    if (!productInfo) {
+      res.status(400).json({ success: false, message: 'Invalid product' });
+      return;
+    }
+    const amount = productInfo.price;
+
+    const phone    = normalizePhone(String(rawPhone), currency);
+    const rawNetworkOperator = network.trim().toLowerCase();
+    
+    // Map standard network names to Lenco's expected slugs
+    const normalizedOperator = (OPERATOR_MAP[currency] || {})[rawNetworkOperator] || rawNetworkOperator; 
+    
+    if (!['airtel', 'mtn', 'zamtel'].includes(normalizedOperator)) {
+      res.status(400).json({ success: false, message: 'Unsupported network operator' });
+      return;
+    }
+    
+    const reference = `PAY-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+
+    console.log(`[Pay] phone=${phone} op=${normalizedOperator} currency=${currency} amount=${amount}`);
+
+    const lencoPayload = {
+      amount: parseFloat(String(amount)),
+      currency,
+      operator: normalizedOperator,
+      phone,
+      reference,
+      bearer: 'merchant',
+    };
+
     const lencoRes = await fetch(`${LENCO_BASE_URL}/collections/mobile-money`, {
       method: 'POST',
       headers: {
@@ -97,26 +121,44 @@ app.post('/api/pay', async (req: Request, res: Response) => {
 
     console.log('[Lenco /pay response]', JSON.stringify(responseData));
 
-    const txnData    = (responseData.data || {}) as any;
-    const txnId      = txnData.id as string | undefined;
-    const initStatus = (txnData.status || '').toUpperCase() as string;
-    const reason     = txnData.reasonForFailure as string | undefined;
+    const transactionData    = (responseData.data || {}) as any;
+    const txnId      = transactionData.id as string | undefined;
+    const initialTransactionStatus = (transactionData.status || '').toUpperCase() as string;
+    const reason     = transactionData.reasonForFailure as string | undefined;
 
-    console.log(`[Pay] txnId=${txnId} initStatus=${initStatus} reason=${reason || 'none'}`);
+    console.log(`[Pay] txnId=${txnId} initStatus=${initialTransactionStatus} reason=${reason || 'none'}`);
 
-    if (txnId && initStatus === 'FAILED') {
+    if (txnId && initialTransactionStatus === 'FAILED') {
       // Transaction failed at initiation (e.g. insufficient funds, wrong PIN)
       res.json({
         success: false,
         message: reason || 'Payment failed. Please check your balance and try again.',
         immediate: true,
       });
-    } else if (txnId && initStatus !== 'CANCELLED') {
-      // Genuinely pending — start polling
-      transactionStore.set(txnId, product || 'Digital Asset');
+    } else if (txnId && initialTransactionStatus !== 'CANCELLED') {
+      const createdAt = new Date();
+      const expiresAt = new Date(createdAt.getTime() + 2 * 60 * 60 * 1000);
+      await db.collection('transactions').doc(txnId).set({
+        transactionId: txnId,
+        status: initialTransactionStatus || 'PENDING',
+        productName: product,
+        amount: amount,
+        createdAt: admin.firestore.Timestamp.fromDate(createdAt),
+        expiresAt: admin.firestore.Timestamp.fromDate(expiresAt)
+      });
       res.json({ success: true, transaction_id: txnId });
     } else if (lencoRes.ok && responseData.status === true) {
-      transactionStore.set(reference, product || 'Digital Asset');
+      // Fallback for successful init without an explicit transaction ID
+      const createdAt = new Date();
+      const expiresAt = new Date(createdAt.getTime() + 2 * 60 * 60 * 1000);
+      await db.collection('transactions').doc(reference).set({
+        transactionId: reference,
+        status: 'PENDING',
+        productName: product,
+        amount: amount,
+        createdAt: admin.firestore.Timestamp.fromDate(createdAt),
+        expiresAt: admin.firestore.Timestamp.fromDate(expiresAt)
+      });
       res.json({ success: true, transaction_id: reference });
     } else {
       const errMsg = responseData.message || 'Unable to initiate payment. Check your number and try again.';
@@ -134,6 +176,20 @@ app.get('/api/status/:transaction_id', async (req: Request, res: Response) => {
   const { transaction_id } = req.params;
 
   try {
+    const docRef = db.collection('transactions').doc(transaction_id);
+    const docSnap = await docRef.get();
+
+    if (!docSnap.exists) {
+      res.status(404).json({ success: false, message: 'Transaction not found.' });
+      return;
+    }
+
+    const txData = docSnap.data();
+    if (!txData || !txData.expiresAt || txData.expiresAt.toDate() < new Date()) {
+      res.status(404).json({ success: false, message: 'Transaction expired or invalid.' });
+      return;
+    }
+
     const lencoRes = await fetch(`${LENCO_BASE_URL}/collections/status/${transaction_id}`, {
       headers: {
         Authorization: `Bearer ${LENCO_API_KEY}`,
@@ -158,9 +214,13 @@ app.get('/api/status/:transaction_id', async (req: Request, res: Response) => {
       let reason: string | undefined;
 
       if (status === 'SUCCESSFUL') {
-        product_name = transactionStore.get(transaction_id) || 'Digital Product';
-        const filename = PRODUCT_MAP[product_name] || 'ZovaDigitalProduct.pdf';
-        download_link = `/assets/${filename}`;
+        product_name = txData.productName;
+        const productInfo = PRODUCT_CATALOG[product_name as string];
+        if (!productInfo) {
+          res.status(400).json({ success: false, message: 'Invalid product.' });
+          return;
+        }
+        download_link = `/assets/${productInfo.file}`;
       } else if (status === 'FAILED') {
         reason = data.reasonForFailure || 'Payment was declined.';
       }

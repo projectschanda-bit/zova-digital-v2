@@ -108,6 +108,10 @@ tailwind.config = {
     /* Overlay buttons: full-width touch targets */
     #ov-fail button { min-height: 48px; }
   }
+
+  @keyframes spin      { to { transform: rotate(360deg); } }
+  @keyframes vibrate   { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  @keyframes failPulse { 0%{transform:scale(1);opacity:.7} 70%{transform:scale(1.18);opacity:0} 100%{transform:scale(1.18);opacity:0} }
 </style>
 </head>
 <body class="flex items-start justify-center p-4 md:p-10">
@@ -466,12 +470,6 @@ tailwind.config = {
   </div>
 </div>
 
-<style>
-@keyframes spin      { to { transform: rotate(360deg); } }
-@keyframes vibrate   { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
-@keyframes failPulse { 0%{transform:scale(1);opacity:.7} 70%{transform:scale(1.18);opacity:0} 100%{transform:scale(1.18);opacity:0} }
-</style>
-
 </div><!-- /w-full.max-w-5xl -->
 
 <script>
@@ -484,10 +482,9 @@ let activeDiscount = 0;
 window.onload = () => {
     const params = new URLSearchParams(window.location.search);
     const productParam = params.get('product');
-    const priceParam = parseFloat(params.get('price'));
     const currencyParam = params.get('currency');
 
-    if (productParam && !isNaN(priceParam)) {
+    if (productParam) {
         BASE = priceParam;
         CURRENCY = currencyParam || 'ZMW';
         PRODUCT_NAME = productParam;
@@ -612,7 +609,8 @@ function startTimer(seconds) {
 async function handlePay() {
   const btn     = document.getElementById('pay-btn');
   const phone   = document.getElementById('phone-input').value.replace(/\D/g,'');
-  const network = document.querySelector('input[name="network"]:checked').dataset.net;
+  const networkInput = document.querySelector('input[name="network"]:checked');
+  const network = networkInput ? networkInput.dataset.net : 'mtn';
 
   cancelled = false; // reset for new attempt
   btn.disabled = true;
@@ -625,7 +623,7 @@ async function handlePay() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        phone, amount: BASE - activeDiscount,
+        phone,
         currency: CURRENCY, network, product: PRODUCT_NAME
       })
     });
