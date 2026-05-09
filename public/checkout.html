@@ -480,6 +480,8 @@ let PRODUCT_NAME = 'Digital Asset';
 let activeDiscount = 0;
 
 window.onload = () => {
+    console.log('URL params:', window.location.search);
+    console.log('Full URL:', window.location.href);
     const params = new URLSearchParams(window.location.search);
     const productParam = params.get('product');
     const currencyParam = params.get('currency');
