@@ -236,6 +236,33 @@ app.get('/api/status/:transaction_id', async (req: Request, res: Response) => {
   }
 });
 
+// POST /api/webhook
+app.post('/api/webhook', async (req: Request, res: Response) => {
+  try {
+    // Placeholder for Lenco signature verification
+    // const signature = req.headers['x-lenco-signature'];
+    // if (!verifySignature(req.body, signature, LENCO_API_KEY)) {
+    //   return res.status(401).send('Unauthorized');
+    // }
+
+    const { transactionId, status } = req.body;
+
+    if (!transactionId || !status) {
+      return res.status(400).send('Missing payload fields');
+    }
+
+    await db.collection('transactions').doc(transactionId).update({ 
+      status: status.toUpperCase() 
+    });
+
+    res.status(200).send('OK');
+  } catch (err) {
+    console.error('Webhook error:', err);
+    // Return 200 to acknowledge receipt and avoid retry loops
+    res.status(200).send('OK');
+  }
+});
+
 // Required for Vercel
 const PORT = process.env.PORT || 5000;
 if (require.main === module) {

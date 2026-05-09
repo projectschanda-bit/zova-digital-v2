@@ -336,6 +336,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
       <option value="UGX" data-methods="MTN, Airtel">🇺🇬 Uganda (UGX)</option>
     </select>
     <div id="paymentMethods" class="payment-methods-text">Pay securely with MTN, Airtel, Zamtel. No card needed.</div>
+    <div id="rate-warning" class="text-[11px] text-amber-400 mt-2 hidden">Prices are approximate based on latest cached data.</div>
   </div>
   <div class="pricing-grid">
 
@@ -621,12 +622,13 @@ let currentRates = {
 // Simulated Live Fetch
 async function fetchRates() {
     try {
-        // In real use: const res = await fetch('https://api.exchangerate-api.com/v4/latest/ZMW');
-        // const data = await res.json();
-        // currentRates = { ...currentRates, ...data.rates };
-        console.log("Rates updated from API (simulated)");
+        const res = await fetch('https://api.exchangerate-api.com/v4/latest/ZMW');
+        const data = await res.json();
+        currentRates = { ...currentRates, ...data.rates };
+        console.log("Rates updated from API");
     } catch (e) {
         console.log("Using fallback rates");
+        document.getElementById('rate-warning').classList.remove('hidden');
     }
 }
 fetchRates();
