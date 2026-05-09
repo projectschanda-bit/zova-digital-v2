@@ -82,14 +82,15 @@ app.post('/api/pay', async (req: Request, res: Response) => {
 
     const phone    = normalizePhone(String(rawPhone), currency);
     const rawNetworkOperator = network.trim().toLowerCase();
-    
-    // Map standard network names to Lenco's expected slugs
-    const normalizedOperator = (OPERATOR_MAP[currency] || {})[rawNetworkOperator] || rawNetworkOperator; 
-    
-    if (!['airtel', 'mtn', 'zamtel'].includes(normalizedOperator)) {
-      res.status(400).json({ success: false, message: 'Unsupported network operator' });
+    const operatorMap = OPERATOR_MAP[currency];
+
+    // Validate operator against the map for the specific currency
+    if (!operatorMap || !operatorMap[rawNetworkOperator]) {
+      res.status(400).json({ success: false, message: 'Unsupported network operator for this currency' });
       return;
     }
+
+    const normalizedOperator = operatorMap[rawNetworkOperator];
     
     const reference = `PAY-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 
@@ -167,7 +168,7 @@ app.post('/api/pay', async (req: Request, res: Response) => {
     }
   } catch (err) {
     console.error('Lenco /api/pay error:', err);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
+    res.status(500).json({ success: false, message: 'Payment processing failed.' });
   }
 });
 
@@ -231,7 +232,7 @@ app.get('/api/status/:transaction_id', async (req: Request, res: Response) => {
     }
   } catch (err) {
     console.error('Lenco /api/status error:', err);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
+    res.status(500).json({ success: false, message: 'Payment processing failed.' });
   }
 });
 
