@@ -708,5 +708,32 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.getElementById('promo-input') === document.activeElement) applyPromo();
 });
 </script>
+<script>
+(function() {
+  var p = new URLSearchParams(window.location.search);
+  var prod = p.get('product');
+  var price = parseFloat(p.get('price'));
+  var curr = p.get('currency') || 'ZMW';
+  if (!prod || isNaN(price) || price <= 0) return;
+  var map = {
+    'checkout-title': prod,
+    'amount-currency': curr,
+    'amount-value': price.toFixed(2),
+    'summary-product-name': prod,
+    'summary-product-price': curr + ' ' + Math.round(price),
+    'subtotal-display': curr + ' ' + price.toFixed(2),
+    'total-display': curr + ' ' + price.toFixed(2),
+    'confirm-price': curr + ' ' + price.toFixed(2),
+    'pay-btn-text': 'Pay ' + curr + ' ' + price.toFixed(2)
+  };
+  Object.keys(map).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = map[id];
+  });
+  if (typeof BASE !== 'undefined') BASE = price;
+  if (typeof CURRENCY !== 'undefined') CURRENCY = curr;
+  if (typeof PRODUCT_NAME !== 'undefined') PRODUCT_NAME = prod;
+})();
+</script>
 </body>
 </html>
