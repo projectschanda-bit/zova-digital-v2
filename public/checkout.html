@@ -481,26 +481,26 @@ let CURRENCY = 'ZMW';
 let PRODUCT_NAME = 'Digital Asset';
 let activeDiscount = 0;
 
-window.onload = () => {
-    const params = new URLSearchParams(window.location.search);
-    const productParam = params.get('product');
-    const priceParam = parseFloat(params.get('price'));
-    const currencyParam = params.get('currency') || 'ZMW';
+document.addEventListener('DOMContentLoaded', function() {
+    var params = new URLSearchParams(window.location.search);
+    var productParam = params.get('product');
+    var priceParam = parseFloat(params.get('price'));
+    var currencyParam = params.get('currency') || 'ZMW';
 
     if (productParam && !isNaN(priceParam) && priceParam > 0) {
         BASE = priceParam;
         CURRENCY = currencyParam;
         PRODUCT_NAME = productParam;
 
-        const titleEl = document.getElementById('checkout-title');
-        const currencyEl = document.getElementById('amount-currency');
-        const valueEl = document.getElementById('amount-value');
-        const summaryNameEl = document.getElementById('summary-product-name');
-        const summaryPriceEl = document.getElementById('summary-product-price');
-        const subtotalEl = document.getElementById('subtotal-display');
-        const totalEl = document.getElementById('total-display');
-        const confirmEl = document.getElementById('confirm-price');
-        const btnEl = document.getElementById('pay-btn-text');
+        var titleEl = document.getElementById('checkout-title');
+        var currencyEl = document.getElementById('amount-currency');
+        var valueEl = document.getElementById('amount-value');
+        var summaryNameEl = document.getElementById('summary-product-name');
+        var summaryPriceEl = document.getElementById('summary-product-price');
+        var subtotalEl = document.getElementById('subtotal-display');
+        var totalEl = document.getElementById('total-display');
+        var confirmEl = document.getElementById('confirm-price');
+        var btnEl = document.getElementById('pay-btn-text');
 
         if (titleEl) titleEl.innerText = productParam;
         if (currencyEl) currencyEl.innerText = currencyParam;
@@ -512,7 +512,7 @@ window.onload = () => {
         if (confirmEl) confirmEl.innerText = currencyParam + ' ' + priceParam.toFixed(2);
         if (btnEl) btnEl.innerText = 'Pay ' + currencyParam + ' ' + priceParam.toFixed(0);
     }
-};
+});
 
 function updateTotal() {
     const newTotal = BASE - activeDiscount;
