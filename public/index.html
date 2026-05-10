@@ -205,7 +205,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   /* Pill badge: smaller on mobile */
   .pill-badge { font-size: 11px; padding: 8px 16px; }
 }
-@media (max-width: 768px) { .about-inner, .faq-inner { grid-template-columns: 1fr !important; gap: 40px !important; } }
+@media (max-width: 768px) { .about-inner, .faq-inner { grid-template-columns: 1fr !important; gap: 40px !important; } .about-portrait { display: none !important; } }
 </style>
 </head>
 <body class="mesh-bg slash-overlay">
@@ -271,7 +271,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
         </div>
       </div>
     </div>
-    <div style="position:relative;height:100%;min-height:400px;background:url('./assets/man_portrait.png') center/cover;border-radius:24px;border:1px solid rgba(255,255,255,0.1)">
+    <div class="about-portrait" style="position:relative;height:100%;min-height:400px;background:url('./assets/man_portrait.png') center/cover;border-radius:24px;border:1px solid rgba(255,255,255,0.1)">
         <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(11,19,38,0.8), transparent)"></div>
         <div style="position:absolute;bottom:30px;left:30px;right:30px;background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);padding:20px;border-radius:16px;border:1px solid rgba(255,255,255,0.1)">
             <p style="font-size:14px;font-weight:600;color:#fff">"Technology is the great equalizer. We're here to make sure Africa leads the charge."</p>
