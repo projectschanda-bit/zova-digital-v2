@@ -481,35 +481,41 @@ let CURRENCY = 'ZMW';
 let PRODUCT_NAME = 'Digital Asset';
 let activeDiscount = 0;
 
-window.onload = () => {
-    const params = new URLSearchParams(window.location.search);
-    const productParam = params.get('product');
-    const priceParam = parseFloat(params.get('price'));
-    const currencyParam = params.get('currency');
+    window.onload = function() {
+        console.log('Checkout page loaded. Parsing URL parameters...');
+        const params = new URLSearchParams(window.location.search);
+        
+        const productParam = params.get('product');
+        const priceParam = parseFloat(params.get('price'));
+        const currencyParam = params.get('currency');
 
-    if (productParam && !isNaN(priceParam)) {
-        BASE = priceParam;
-        CURRENCY = currencyParam || 'ZMW';
-        PRODUCT_NAME = productParam;
-        
-        document.getElementById('checkout-title').innerText = productParam;
-        document.getElementById('summary-product-name').innerText = productParam;
-        document.getElementById('amount-currency').innerText = CURRENCY;
-        document.getElementById('amount-value').innerText = BASE.toFixed(2);
-        
-        document.getElementById('summary-product-price').innerText = `${CURRENCY} ${BASE.toFixed(0)}`;
-        document.getElementById('subtotal-display').innerText = `${CURRENCY} ${BASE.toFixed(2)}`;
-        document.getElementById('vat-display').innerText = `${CURRENCY} 0.00`;
-        
-        // Update country code based on currency
-        const codes = { 'ZMW': '+260', 'KES': '+254', 'NGN': '+234', 'GHS': '+233', 'UGX': '+256' };
-        if (codes[CURRENCY]) {
-            document.getElementById('country-code').innerText = codes[CURRENCY];
+        console.log('URL Params:', { product: productParam, price: priceParam, currency: currencyParam });
+
+        if (productParam && !isNaN(priceParam)) {
+            BASE = priceParam;
+            CURRENCY = currencyParam || 'ZMW';
+            PRODUCT_NAME = productParam;
+            
+            // Update UI elements
+            document.getElementById('checkout-title').innerText = PRODUCT_NAME;
+            document.getElementById('summary-product-name').innerText = PRODUCT_NAME;
+            document.getElementById('amount-currency').innerText = CURRENCY;
+            document.getElementById('amount-value').innerText = BASE.toFixed(2);
+            
+            document.getElementById('summary-product-price').innerText = `${CURRENCY} ${BASE.toFixed(0)}`;
+            document.getElementById('subtotal-display').innerText = `${CURRENCY} ${BASE.toFixed(2)}`;
+            document.getElementById('vat-display').innerText = `${CURRENCY} 0.00`;
+            
+            const codes = { 'ZMW': '+260', 'KES': '+254', 'NGN': '+234', 'GHS': '+233', 'UGX': '+256' };
+            if (codes[CURRENCY]) {
+                document.getElementById('country-code').innerText = codes[CURRENCY];
+            }
+
+            updateTotal();
+        } else {
+            console.warn('Invalid or missing parameters in URL. Using defaults.');
         }
-
-        updateTotal();
-    }
-};
+    };
 
 function updateTotal() {
     const newTotal = BASE - activeDiscount;

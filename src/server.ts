@@ -66,6 +66,11 @@ app.post('/api/pay', async (req: Request, res: Response) => {
   const phone    = normalizePhone(String(rawPhone), currency);
   const rawOp    = network.toLowerCase();
   const operator = (OPERATOR_MAP[currency] || {})[rawOp] || rawOp; // fallback to raw
+  
+  const countryMap: Record<string, string> = {
+    ZMW: 'zm', KES: 'ke', NGN: 'ng', GHS: 'gh', UGX: 'ug'
+  };
+  const country = countryMap[currency] || 'zm';
   const reference = `PAY-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 
   console.log(`[Pay] phone=${phone} op=${operator} currency=${currency} amount=${amount}`);
@@ -75,8 +80,10 @@ app.post('/api/pay', async (req: Request, res: Response) => {
     currency,
     operator,
     phone,
+    country,
     reference,
     bearer: 'merchant',
+    description: `Purchase of ${product || 'Digital Asset'}`
   };
 
   try {
