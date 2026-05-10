@@ -4,285 +4,194 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Secure Checkout — Zova Digital</title>
+ 
+<!-- ██ READ URL PARAMS FIRST — before any other script or render ██ -->
+<script>
+(function(){
+  var p   = new URLSearchParams(window.location.search);
+  var prc = parseFloat(p.get('price'));
+  window.__Z = {
+    product  : p.get('product')  || '',
+    price    : (!isNaN(prc) && prc > 0) ? prc : 0,
+    currency : p.get('currency') || 'ZMW'
+  };
+})();
+</script>
+ 
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-tailwind.config = {
-  darkMode:"class",
-  theme:{extend:{
-    colors:{
-      "surface":"#0f0524","background":"#0f0524","on-surface":"#f5f0ff",
-      "on-surface-variant":"#e9d5ff","surface-variant":"#2e1065",
-      "primary":"#c084fc","primary-container":"#a855f7",
-      "secondary":"#f9a8d4","secondary-container":"#db2777",
-      "outline":"#a78bfa","outline-variant":"#4c1d95",
-      "surface-container":"#1e0a3c","surface-container-low":"#180838",
-      "surface-container-high":"#2d1060","surface-bright":"#3b1278",
-      "airtel":"#C8102E","mtn":"#FFC107","zamtel":"#007A4D"
-    },
-    fontFamily:{"sans":["DM Sans","sans-serif"]},
-    borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","2xl":"1rem","full":"9999px"},
-  }}
-}
+tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface":"#0f0524","background":"#0f0524","on-surface":"#f5f0ff","on-surface-variant":"#e9d5ff","surface-variant":"#2e1065","primary":"#c084fc","primary-container":"#a855f7","secondary":"#f9a8d4","secondary-container":"#db2777","outline":"#a78bfa","outline-variant":"#4c1d95","surface-container":"#1e0a3c","surface-container-low":"#180838","surface-container-high":"#2d1060","surface-bright":"#3b1278","airtel":"#C8102E","mtn":"#FFC107","zamtel":"#007A4D"},fontFamily:{"sans":["DM Sans","sans-serif"]},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","2xl":"1rem","full":"9999px"}}}}
 </script>
 <style>
-  *{box-sizing:border-box}
-  body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#0f0524 0%,#1e0a3c 50%,#2d1040 100%);min-height:100vh}
-
-  .glass-dark{background:rgba(15,5,36,0.65);backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(255,255,255,0.10)}
-  .glass-mid{background:rgba(20,8,48,0.55);backdrop-filter:blur(12px) saturate(160%);border:1px solid rgba(255,255,255,0.08)}
-  .glass-light{background:rgba(255,248,255,0.68);backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(139,92,246,0.15)}
-
-  .zova-check{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.5px solid rgba(109,40,217,0.35);border-radius:4px;background:rgba(255,255,255,0.55);cursor:pointer;position:relative;flex-shrink:0;transition:all .15s}
-  .zova-check:checked{background:#6d28d9;border-color:#6d28d9}
-  .zova-check:checked::after{content:'';position:absolute;left:4px;top:1px;width:6px;height:10px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg)}
-  .zova-check:focus{outline:2px solid rgba(192,132,252,0.5);outline-offset:2px}
-
-  .net-card input:checked ~ .net-face{border-width:2px}
-  .net-card input[data-net="airtel"]:checked ~ .net-face{border-color:#C8102E;background:rgba(200,16,46,0.10)}
-  .net-card input[data-net="mtn"]:checked ~ .net-face{border-color:#FFC107;background:rgba(255,193,7,0.10)}
-  .net-card input[data-net="zamtel"]:checked ~ .net-face{border-color:#007A4D;background:rgba(0,122,77,0.10)}
-
-  .promo-input::placeholder{color:rgba(107,114,128,0.7)}
-  .promo-input:focus{outline:none;border-color:rgba(109,40,217,0.45);background:rgba(255,255,255,0.80)}
-
-  .acc-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
-  .acc-body.open{max-height:400px}
-  .acc-icon{transition:transform .25s ease}
-  .acc-icon.open{transform:rotate(180deg)}
-
-  .pay-btn{position:relative;overflow:hidden}
-  .pay-btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.10),transparent);transition:left .4s ease}
-  .pay-btn:hover::after{left:140%}
-
-  .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(109,40,217,0.15),transparent)}
-
-  .dot-airtel{box-shadow:0 0 8px rgba(200,16,46,0.45)}
-  .dot-mtn{box-shadow:0 0 8px rgba(255,193,7,0.45)}
-  .dot-zamtel{box-shadow:0 0 8px rgba(0,122,77,0.45)}
-
-  .tip{position:relative;cursor:help}
-  .tip .tip-box{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e0a3c;color:#e9d5ff;font-size:11px;padding:6px 10px;border-radius:6px;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);transition:opacity .15s;pointer-events:none;z-index:50}
-  .tip:hover .tip-box{visibility:visible;opacity:1}
-
-  /* ── Mobile responsiveness ─────────────────────── */
-  @media (max-width: 767px) {
-
-    /* Body: reduce outer padding */
-    body { padding: 12px !important; align-items: flex-start; }
-
-    /* Header: compress, allow logo to shrink */
-    .zova-header { gap: 8px; }
-    .zova-header img { height: 32px !important; }
-    .zova-header .secure-label { display: none; } /* hide on very small screens */
-
-    /* Panels: reduce inner padding */
-    .panel-pad { padding: 16px !important; }
-
-    /* Amount: scale down large number */
-    #amount-value { font-size: 2rem !important; }
-
-    /* Network selector: tighten grid gap, reduce dot size */
-    .net-face { padding: 8px !important; }
-    .net-face span { font-size: 9px !important; letter-spacing: 0.04em !important; }
-    .net-face .dot-airtel,
-    .net-face .dot-mtn,
-    .net-face .dot-zamtel { width: 14px !important; height: 14px !important; }
-
-    /* Promo row: stack on very small screens */
-    @media (max-width: 400px) {
-      #promo-row { flex-direction: column !important; }
-      #promo-row button { width: 100% !important; }
-    }
-
-    /* Overlay card: constrain height, make scrollable */
-    #pay-overlay > div {
-      max-height: 88vh;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 24px 20px !important;
-      width: calc(100vw - 24px) !important;
-      max-width: 420px;
-    }
-
-    /* Overlay buttons: full-width touch targets */
-    #ov-fail button { min-height: 48px; }
-  }
+*{box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#0f0524 0%,#1e0a3c 50%,#2d1040 100%);min-height:100vh}
+.glass-dark{background:rgba(15,5,36,0.65);backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(255,255,255,0.10)}
+.glass-mid{background:rgba(20,8,48,0.55);backdrop-filter:blur(12px) saturate(160%);border:1px solid rgba(255,255,255,0.08)}
+.glass-light{background:rgba(255,248,255,0.68);backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(139,92,246,0.15)}
+.zova-check{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.5px solid rgba(109,40,217,0.35);border-radius:4px;background:rgba(255,255,255,0.55);cursor:pointer;position:relative;flex-shrink:0;transition:all .15s}
+.zova-check:checked{background:#6d28d9;border-color:#6d28d9}
+.zova-check:checked::after{content:'';position:absolute;left:4px;top:1px;width:6px;height:10px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg)}
+.zova-check:focus{outline:2px solid rgba(192,132,252,0.5);outline-offset:2px}
+.net-card input:checked~.net-face{border-width:2px}
+.net-card input[data-net="airtel"]:checked~.net-face{border-color:#C8102E;background:rgba(200,16,46,0.10)}
+.net-card input[data-net="mtn"]:checked~.net-face{border-color:#FFC107;background:rgba(255,193,7,0.10)}
+.net-card input[data-net="zamtel"]:checked~.net-face{border-color:#007A4D;background:rgba(0,122,77,0.10)}
+.promo-input::placeholder{color:rgba(107,114,128,0.7)}
+.promo-input:focus{outline:none;border-color:rgba(109,40,217,0.45);background:rgba(255,255,255,0.80)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.acc-body.open{max-height:400px}
+.acc-icon{transition:transform .25s ease}
+.acc-icon.open{transform:rotate(180deg)}
+.pay-btn{position:relative;overflow:hidden}
+.pay-btn::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.10),transparent);transition:left .4s ease}
+.pay-btn:hover::after{left:140%}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(109,40,217,0.15),transparent)}
+.dot-airtel{box-shadow:0 0 8px rgba(200,16,46,0.45)}
+.dot-mtn{box-shadow:0 0 8px rgba(255,193,7,0.45)}
+.dot-zamtel{box-shadow:0 0 8px rgba(0,122,77,0.45)}
+.tip{position:relative;cursor:help}
+.tip .tip-box{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e0a3c;color:#e9d5ff;font-size:11px;padding:6px 10px;border-radius:6px;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);transition:opacity .15s;pointer-events:none;z-index:50}
+.tip:hover .tip-box{visibility:visible;opacity:1}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s ease}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:linear-gradient(135deg,#1e0a3c,#2d1060);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:32px 28px;max-width:420px;width:100%;transform:translateY(20px) scale(0.97);transition:transform .25s ease;text-align:center}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1)}
+.modal-icon{width:64px;height:64px;border-radius:50%;background:rgba(200,16,46,0.15);border:2px solid rgba(200,16,46,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.modal-btn{display:inline-block;padding:12px 28px;border-radius:12px;font-weight:600;font-size:14px;cursor:pointer;border:none;transition:all .2s}
+@media(max-width:767px){
+  body{padding:12px !important}
+  .grid{grid-template-columns:1fr !important}
+  .p-7{padding:20px !important}
+  .text-4xl{font-size:2rem !important}
+  .grid-cols-3{grid-template-columns:repeat(3,1fr);gap:8px !important}
+  .net-face{padding:10px 6px !important}
+  .modal-box{padding:24px 18px}
+}
+@media(max-width:400px){.grid-cols-3{grid-template-columns:1fr !important}}
 </style>
 </head>
-<body class="flex items-start justify-center p-4 md:p-10">
-
-<!-- Ambient glows -->
+<body class="flex items-start justify-center p-6 md:p-10">
+ 
 <div class="fixed -top-[15%] -left-[5%] w-[45%] h-[45%] bg-[#a855f7] opacity-[0.10] blur-[120px] rounded-full pointer-events-none"></div>
 <div class="fixed top-[50%] right-[5%] w-[30%] h-[30%] bg-[#ec4899] opacity-[0.08] blur-[100px] rounded-full pointer-events-none"></div>
-
+ 
 <div class="w-full max-w-5xl">
-
-  <!-- Header bar -->
-  <div class="flex items-center justify-between mb-6 zova-header">
+ 
+  <div class="flex items-center justify-between mb-6">
     <button onclick="window.location.href='index.html'" class="flex items-center gap-1.5 text-[#e9d5ff] hover:text-white text-sm transition-colors group">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
       Back to Store
     </button>
-    <img src="./assets/logo.png" alt="Zova Digital Logo" class="h-10 w-auto" />
-    <div class="flex items-center gap-1.5 text-xs text-[#a78bfa] secure-label">
+    <img src="./assets/logo.png" alt="Zova Digital" class="h-6 w-auto"/>
+    <div class="flex items-center gap-1.5 text-xs text-[#a78bfa]">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       Secure Checkout
     </div>
   </div>
-
-  <!-- Main grid -->
+ 
   <div class="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] gap-5">
-
-    <!-- ── LEFT: Summary Panel ── -->
-    <div class="glass-dark rounded-2xl p-7 flex flex-col gap-6 relative overflow-hidden panel-pad">
-
-      <!-- Subtle inner glow -->
+ 
+    <!-- LEFT -->
+    <div class="glass-dark rounded-2xl p-7 flex flex-col gap-6 relative overflow-hidden">
       <div class="absolute top-0 right-0 w-48 h-48 bg-[#a855f7] opacity-[0.06] blur-[60px] rounded-full pointer-events-none"></div>
-
-      <!-- Plan badge + name -->
       <div>
         <span class="inline-flex items-center gap-1.5 bg-[#c084fc]/15 text-[#c084fc] text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border border-[#c084fc]/20 mb-3">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           Selected Product
         </span>
-        <h2 id="checkout-title" class="text-white text-2xl font-bold tracking-tight leading-tight">Annual Subscription</h2>
+        <h2 id="checkout-title" class="text-white text-2xl font-bold tracking-tight leading-tight">—</h2>
         <p class="text-[#e9d5ff] text-sm mt-1 opacity-75">Billed once · Instant Delivery</p>
       </div>
-
-      <!-- Amount -->
       <div class="glass-mid rounded-xl p-5">
         <p class="text-[10px] font-bold tracking-widest uppercase text-[#a78bfa] mb-1">Amount Due</p>
         <div class="flex items-baseline gap-1.5">
-          <span id="amount-currency" class="text-[#a78bfa] text-sm font-medium">ZMW</span>
-          <span id="amount-value" class="text-[#c084fc] text-4xl font-bold tracking-tight">4,500.00</span>
+          <span id="amount-currency" class="text-[#a78bfa] text-sm font-medium">—</span>
+          <span id="amount-value" class="text-[#c084fc] text-4xl font-bold tracking-tight">—</span>
         </div>
       </div>
-
-      <!-- Order Summary accordion -->
       <div>
         <button onclick="toggleAcc()" class="w-full flex items-center justify-between text-left group mb-3">
           <span class="text-[10px] font-bold tracking-widest uppercase text-[#a78bfa]">Order Summary</span>
           <svg id="acc-icon" class="acc-icon text-[#a78bfa] group-hover:text-white transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
         </button>
-
         <div id="acc-body" class="acc-body open">
           <div class="space-y-3">
             <div class="flex justify-between items-start">
               <div>
-                <p id="summary-product-name" class="text-[#f5f0ff] text-sm font-medium">Premium Annual Access</p>
+                <p id="summary-product-name" class="text-[#f5f0ff] text-sm font-medium">—</p>
                 <p class="text-[#a78bfa] text-xs">Lifetime Access</p>
               </div>
-              <span id="summary-product-price" class="text-[#f5f0ff] text-sm font-semibold">ZMW 4,500</span>
+              <span id="summary-product-price" class="text-[#f5f0ff] text-sm font-semibold">—</span>
             </div>
             <div class="flex justify-between items-start">
-              <div>
-                <p class="text-[#f5f0ff] text-sm font-medium">Processing Fee</p>
-                <p class="text-[#a78bfa] text-xs">Network fees</p>
-              </div>
+              <div><p class="text-[#f5f0ff] text-sm font-medium">Processing Fee</p><p class="text-[#a78bfa] text-xs">Network fees</p></div>
               <span class="text-[#f9a8d4] text-sm font-semibold">Free</span>
             </div>
           </div>
-
           <div class="mt-4 pt-4 border-t border-white/10 space-y-2">
-            <div class="flex justify-between text-sm">
-              <span class="text-[#a78bfa]">Subtotal</span>
-              <span id="subtotal-display" class="text-[#e9d5ff]">ZMW 4,500.00</span>
-            </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-[#a78bfa]">VAT (16%)</span>
-              <span id="vat-display" class="text-[#e9d5ff]">ZMW 0.00</span>
-            </div>
+            <div class="flex justify-between text-sm"><span class="text-[#a78bfa]">Subtotal</span><span id="subtotal-display" class="text-[#e9d5ff]">—</span></div>
+            <div class="flex justify-between text-sm"><span class="text-[#a78bfa]">VAT (16%)</span><span id="vat-display" class="text-[#e9d5ff]">—</span></div>
             <div class="flex justify-between text-sm items-center">
-              <span class="text-[#a78bfa] flex items-center gap-1">
-                Promo discount
-                <span class="tip">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-                  <span class="tip-box">Apply a code on the right panel</span>
-                </span>
+              <span class="text-[#a78bfa] flex items-center gap-1">Promo discount
+                <span class="tip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span class="tip-box">Apply a code on the right</span></span>
               </span>
               <span id="discount-display" class="text-[#f9a8d4]">—</span>
             </div>
             <div class="pt-2 border-t border-white/10 flex justify-between">
               <span class="text-white font-semibold text-sm">Total</span>
-              <span id="total-display" class="text-[#c084fc] font-bold text-sm">ZMW 4,500.00</span>
+              <span id="total-display" class="text-[#c084fc] font-bold text-sm">—</span>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- What's included -->
       <div>
         <p class="text-[10px] font-bold tracking-widest uppercase text-[#a78bfa] mb-3">What's Included</p>
         <ul class="space-y-2.5">
-          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
-            Unlimited digital product access
-          </li>
-          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
-            High-speed premium downloads
-          </li>
-          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
-            Free future content updates
-          </li>
-          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
-            Priority customer support
-          </li>
+          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Unlimited digital product access</li>
+          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>High-speed premium downloads</li>
+          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Free future content updates</li>
+          <li class="flex items-center gap-2.5 text-[#e9d5ff] text-sm"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Priority customer support</li>
         </ul>
       </div>
-
-      <!-- Refund note -->
       <div class="glass-mid rounded-xl p-4 flex gap-3 items-start">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" class="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         <p class="text-[#a78bfa] text-xs leading-relaxed">14-day money-back guarantee. No questions asked. We are committed to your success.</p>
       </div>
     </div>
-
-    <!-- ── RIGHT: Payment Form ── -->
-    <div class="glass-light rounded-2xl p-7 flex flex-col gap-6 text-[#2e1065] panel-pad">
-
+ 
+    <!-- RIGHT -->
+    <div class="glass-light rounded-2xl p-7 flex flex-col gap-6 text-[#2e1065]">
       <div>
         <h2 class="text-[#2e1065] text-xl font-bold tracking-tight">Complete Payment</h2>
         <p class="text-[#7e6ea8] text-sm mt-1">Select your network and enter your mobile number.</p>
       </div>
-
-      <!-- Network selector -->
       <div>
         <p class="text-[10px] font-bold tracking-widest uppercase text-[#7e6ea8] mb-3">Payment Network</p>
         <div class="grid grid-cols-3 gap-3">
-
           <label class="net-card cursor-pointer">
             <input type="radio" name="network" data-net="airtel" class="sr-only" onchange="setNet('airtel')"/>
-            <div class="net-face glass-light p-3 rounded-xl border-2 border-transparent transition-all flex flex-col items-center gap-2 relative overflow-hidden">
-              <div class="absolute inset-0 bg-[#C8102E] opacity-0 pointer-events-none transition-opacity"></div>
+            <div class="net-face glass-light p-3 rounded-xl border-2 border-transparent transition-all flex flex-col items-center gap-2">
               <div class="w-5 h-5 rounded-full bg-[#C8102E] dot-airtel"></div>
               <span class="text-[10px] font-bold tracking-wider text-[#3b0764]">AIRTEL</span>
             </div>
           </label>
-
           <label class="net-card cursor-pointer">
             <input type="radio" name="network" data-net="mtn" class="sr-only" checked onchange="setNet('mtn')"/>
-            <div class="net-face glass-light p-3 rounded-xl border-2 border-[#FFC107] bg-[#FFC107]/10 transition-all flex flex-col items-center gap-2 relative overflow-hidden">
+            <div class="net-face glass-light p-3 rounded-xl border-2 border-[#FFC107] bg-[#FFC107]/10 transition-all flex flex-col items-center gap-2">
               <div class="w-5 h-5 rounded-full bg-[#FFC107] dot-mtn"></div>
               <span class="text-[10px] font-bold tracking-wider text-[#3b0764]">MTN</span>
             </div>
           </label>
-
           <label class="net-card cursor-pointer">
             <input type="radio" name="network" data-net="zamtel" class="sr-only" onchange="setNet('zamtel')"/>
-            <div class="net-face glass-light p-3 rounded-xl border-2 border-transparent transition-all flex flex-col items-center gap-2 relative overflow-hidden">
+            <div class="net-face glass-light p-3 rounded-xl border-2 border-transparent transition-all flex flex-col items-center gap-2">
               <div class="w-5 h-5 rounded-full bg-[#007A4D] dot-zamtel"></div>
               <span class="text-[10px] font-bold tracking-wider text-[#3b0764]">ZAMTEL</span>
             </div>
           </label>
-
         </div>
       </div>
-
-      <!-- Phone input -->
       <div>
         <p class="text-[10px] font-bold tracking-widest uppercase text-[#7e6ea8] mb-3">Mobile Number</p>
         <div class="flex rounded-xl overflow-hidden border border-[#a78bfa]/30 bg-white/55 backdrop-blur-sm focus-within:border-[#6d28d9]/50 focus-within:bg-white/75 transition-all">
@@ -290,91 +199,52 @@ tailwind.config = {
             <span class="text-lg">🌍</span>
             <span id="country-code" class="text-[#3b0764] font-semibold text-sm">+260</span>
           </div>
-          <input id="phone-input" type="tel" inputmode="numeric" maxlength="15"
-            placeholder="0977 123 456"
-            oninput="validatePhone()"
-            class="promo-input flex-1 bg-transparent px-4 py-3.5 text-[#2e1065] text-sm font-medium focus:outline-none placeholder:text-[#a78bfa]"/>
+          <input id="phone-input" type="tel" inputmode="numeric" maxlength="15" placeholder="096 123 4567" oninput="validatePhone()" class="promo-input flex-1 bg-transparent px-4 py-3.5 text-[#2e1065] text-sm font-medium focus:outline-none placeholder:text-[#a78bfa]"/>
         </div>
         <p class="text-[#a78bfa] text-[11px] mt-1.5 flex items-center gap-1">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          Enter mobile number (e.g. 0977 123 456)
+          Enter mobile number (e.g. 0961 123 456)
         </p>
       </div>
-
-      <!-- Promo code -->
       <div>
         <p class="text-[10px] font-bold tracking-widest uppercase text-[#7e6ea8] mb-3">Promo Code <span class="normal-case font-normal tracking-normal opacity-60">(optional)</span></p>
-        <div class="flex gap-2" id="promo-row">
-          <input id="promo-input" type="text" placeholder="e.g. ZOVA20"
-            class="promo-input flex-1 bg-white/55 backdrop-blur-sm border border-[#a78bfa]/25 rounded-xl px-4 py-3 text-sm text-[#2e1065] uppercase tracking-widest placeholder:normal-case placeholder:tracking-normal placeholder:text-[#a78bfa] focus:outline-none transition-all"/>
-          <button onclick="applyPromo()" class="px-5 py-3 bg-[#4c1d95]/90 text-white rounded-xl text-sm font-semibold hover:bg-[#4c1d95] transition-colors flex-shrink-0">
-            Apply
-          </button>
+        <div class="flex gap-2">
+          <input id="promo-input" type="text" placeholder="e.g. ZOVA20" class="promo-input flex-1 bg-white/55 backdrop-blur-sm border border-[#a78bfa]/25 rounded-xl px-4 py-3 text-sm text-[#2e1065] uppercase tracking-widest placeholder:normal-case placeholder:tracking-normal placeholder:text-[#a78bfa] focus:outline-none transition-all"/>
+          <button onclick="applyPromo()" class="px-5 py-3 bg-[#4c1d95]/90 text-white rounded-xl text-sm font-semibold hover:bg-[#4c1d95] transition-colors flex-shrink-0">Apply</button>
         </div>
         <p id="promo-msg" class="text-[11px] mt-1.5 hidden"></p>
       </div>
-
       <div class="divider"></div>
-
-      <!-- Checkboxes -->
       <div class="space-y-4">
         <p class="text-[10px] font-bold tracking-widest uppercase text-[#7e6ea8]">Confirm & Agree</p>
-
-        <label class="flex items-start gap-3 cursor-pointer group">
+        <label class="flex items-start gap-3 cursor-pointer">
           <input type="checkbox" id="terms-check" class="zova-check mt-0.5" onchange="validateForm()"/>
-          <span class="text-[#3b0764] text-sm leading-relaxed">
-            I agree to the
-            <a href="#" class="text-[#6d28d9] font-semibold underline underline-offset-2 hover:text-[#4c1d95]">Terms of Service</a>
-            and
-            <a href="#" class="text-[#6d28d9] font-semibold underline underline-offset-2 hover:text-[#4c1d95]">Privacy Policy</a>
-          </span>
+          <span class="text-[#3b0764] text-sm leading-relaxed">I agree to the <a href="#" class="text-[#6d28d9] font-semibold underline underline-offset-2 hover:text-[#4c1d95]">Terms of Service</a> and <a href="#" class="text-[#6d28d9] font-semibold underline underline-offset-2 hover:text-[#4c1d95]">Privacy Policy</a></span>
         </label>
-
-        <label class="flex items-start gap-3 cursor-pointer group">
+        <label class="flex items-start gap-3 cursor-pointer">
           <input type="checkbox" id="recurring-check" class="zova-check mt-0.5" onchange="validateForm()"/>
-          <span class="text-[#3b0764] text-sm leading-relaxed">
-            I understand this is a
-            <span class="font-semibold">one-time payment</span>
-            of <span id="confirm-price">ZMW 4,500.00</span> and authorise ZOVA Digital to process this transaction
-          </span>
+          <span class="text-[#3b0764] text-sm leading-relaxed">I understand this is a <span class="font-semibold">one-time payment</span> of <span id="confirm-price">—</span> and authorise ZOVA Digital to process this transaction</span>
         </label>
-
         <label class="flex items-start gap-3 cursor-pointer">
           <input type="checkbox" id="updates-check" class="zova-check mt-0.5"/>
-          <span class="text-[#7e6ea8] text-sm leading-relaxed">
-            Send me product updates, new features, and exclusive offers <span class="opacity-60">(optional)</span>
-          </span>
+          <span class="text-[#7e6ea8] text-sm leading-relaxed">Send me product updates, new features, and exclusive offers <span class="opacity-60">(optional)</span></span>
         </label>
       </div>
-
-      <!-- Pay button -->
-      <button id="pay-btn" disabled onclick="handlePay()"
-        class="pay-btn w-full bg-[#3b0764] disabled:opacity-40 disabled:cursor-not-allowed text-white py-4 px-6 rounded-xl font-semibold text-[15px] flex items-center justify-between transition-all hover:bg-[#4c1d95] group">
-        <span id="pay-btn-text">Pay ZMW 4,500.00</span>
+      <div id="pay-error" class="hidden rounded-xl bg-[#C8102E]/10 border border-[#C8102E]/20 p-4 text-[#C8102E] text-xs leading-relaxed"></div>
+      <button id="pay-btn" disabled onclick="handlePay()" class="pay-btn w-full bg-[#3b0764] disabled:opacity-40 disabled:cursor-not-allowed text-white py-4 px-6 rounded-xl font-semibold text-[15px] flex items-center justify-between transition-all hover:bg-[#4c1d95] group">
+        <span id="pay-btn-text">Pay —</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" class="group-hover:translate-x-0.5 transition-transform"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
       </button>
-
-      <!-- Trust row -->
       <div class="flex items-center justify-center gap-4 flex-wrap">
-        <div class="flex items-center gap-1.5 text-[#a78bfa] text-[11px]">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          256-bit encryption
-        </div>
+        <div class="flex items-center gap-1.5 text-[#a78bfa] text-[11px]"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>256-bit encryption</div>
         <div class="w-px h-3 bg-[#a78bfa]/25"></div>
-        <div class="flex items-center gap-1.5 text-[#a78bfa] text-[11px]">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Lenco BroadPay
-        </div>
+        <div class="flex items-center gap-1.5 text-[#a78bfa] text-[11px]"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Lenco BroadPay</div>
         <div class="w-px h-3 bg-[#a78bfa]/25"></div>
-        <div class="flex items-center gap-1.5 text-[#a78bfa] text-[11px]">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          14-day guarantee
-        </div>
+        <div class="flex items-center gap-1.5 text-[#a78bfa] text-[11px]"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>14-day guarantee</div>
       </div>
     </div>
   </div>
-
-  <!-- Footer -->
+ 
   <div class="mt-6 text-center text-[#6b4fa8] text-xs flex items-center justify-center gap-4 flex-wrap">
     <span>© 2026 ZOVA Digital · Lusaka, Zambia</span>
     <span class="opacity-40">·</span>
@@ -384,173 +254,99 @@ tailwind.config = {
     <span class="opacity-40">·</span>
     <a href="#" class="hover:text-[#c084fc] transition-colors">Support</a>
   </div>
-
-<!-- ═══ Payment Processing Overlay ═══ -->
-<div id="pay-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(15,5,36,0.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);align-items:center;justify-content:center;padding:20px">
-  <div style="background:rgba(255,248,255,0.72);backdrop-filter:blur(20px);border:1px solid rgba(139,92,246,0.2);border-radius:24px;padding:40px 28px;max-width:400px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.5)">
-
-    <!-- Initiating -->
-    <div id="ov-init">
-      <div style="width:68px;height:68px;border-radius:50%;background:rgba(160,120,255,0.12);border:2px solid rgba(192,132,252,0.35);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
-        <svg style="animation:spin 1s linear infinite" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-      </div>
-      <h3 style="color:#2e1065;font-size:20px;font-weight:700;margin-bottom:8px">Connecting...</h3>
-      <p id="ov-init-txt" style="color:#7e6ea8;font-size:14px;line-height:1.6">Initiating STK push to your mobile number</p>
+</div>
+ 
+<!-- Modal -->
+<div id="funds-modal" class="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
     </div>
-
-    <!-- STK Sent / Waiting for PIN -->
-    <div id="ov-wait" style="display:none">
-      <div id="ov-phone" style="font-size:56px;margin-bottom:16px;animation:vibrate 0.5s linear infinite">📱</div>
-      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:9999px;padding:5px 14px;margin-bottom:18px">
-        <div style="width:7px;height:7px;border-radius:50%;background:#22C55E;box-shadow:0 0 8px #22C55E"></div>
-        <span style="font-size:11px;font-weight:700;color:#15803d;letter-spacing:0.06em">STK PUSH SENT</span>
-      </div>
-      <h3 style="color:#2e1065;font-size:21px;font-weight:700;margin-bottom:8px">Check Your Phone!</h3>
-      <p id="ov-net-txt" style="color:#7e6ea8;font-size:13px;line-height:1.6;margin-bottom:18px">A payment prompt was sent.<br>Enter your mobile money PIN to complete.</p>
-      <div style="background:rgba(109,40,217,0.07);border:1px solid rgba(109,40,217,0.15);border-radius:12px;padding:14px;margin-bottom:18px">
-        <p style="font-size:11px;color:#7e6ea8;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">Session expires in</p>
-        <p id="ov-timer" style="font-size:30px;font-weight:800;color:#6d28d9">2:00</p>
-      </div>
-      <p style="font-size:12px;color:#a78bfa">⏳ Waiting for confirmation...</p>
+    <h3 class="text-white text-lg font-bold mb-2">⚠️ Before You Pay</h3>
+    <p class="text-[#e9d5ff] text-sm leading-relaxed mb-4">Please ensure your mobile money wallet has <strong>sufficient funds</strong> to cover the full amount before initiating payment.</p>
+    <div class="bg-white/5 border border-white/10 rounded-xl p-4 mb-5 text-left space-y-2">
+      <p class="text-[#a78bfa] text-xs font-bold tracking-widest uppercase mb-2">How to top up</p>
+      <div class="flex items-start gap-2 text-[#e9d5ff] text-xs"><span class="text-[#c084fc] font-bold flex-shrink-0">1.</span><span>Dial <strong class="text-white">*303#</strong> (MTN) / <strong class="text-white">*115#</strong> (Airtel) / <strong class="text-white">*331#</strong> (Zamtel)</span></div>
+      <div class="flex items-start gap-2 text-[#e9d5ff] text-xs"><span class="text-[#c084fc] font-bold flex-shrink-0">2.</span><span>Choose <strong class="text-white">"Deposit / Top Up"</strong> and follow prompts</span></div>
+      <div class="flex items-start gap-2 text-[#e9d5ff] text-xs"><span class="text-[#c084fc] font-bold flex-shrink-0">3.</span><span>Ensure balance covers <strong id="modal-amount" class="text-[#c084fc]">—</strong></span></div>
     </div>
-
-    <!-- Success -->
-    <div id="ov-ok" style="display:none">
-      <div style="width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,#22C55E,#16a34a);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 0 36px rgba(34,197,94,0.45)">
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
-      </div>
-      <h3 style="color:#15803d;font-size:22px;font-weight:800;margin-bottom:8px">Payment Successful!</h3>
-      <p style="color:#7e6ea8;font-size:13px;line-height:1.6;margin-bottom:20px">Your purchase is confirmed. Preparing your download...</p>
-      <div id="ov-product" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;color:#15803d;margin-bottom:14px"></div>
-      <p style="font-size:12px;color:#a78bfa">⬇️ Download starting automatically...</p>
-    </div>
-
-    <!-- Failed -->
-    <div id="ov-fail" style="display:none;text-align:center">
-      <!-- Animated failure icon -->
-      <div style="position:relative;width:80px;height:80px;margin:0 auto 22px">
-        <!-- Pulse ring -->
-        <div style="position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(200,16,46,0.25);animation:failPulse 1.6s ease-out infinite"></div>
-        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(200,16,46,0.15),rgba(200,16,46,0.08));border:2px solid rgba(200,16,46,0.4);display:flex;align-items:center;justify-content:center">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.5" stroke-linecap="round">
-            <path d="M18 6L6 18M6 6l12 12"/>
-          </svg>
-        </div>
-      </div>
-
-      <!-- Label -->
-      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(200,16,46,0.08);border:1px solid rgba(200,16,46,0.25);border-radius:9999px;padding:4px 14px;margin-bottom:16px">
-        <div style="width:6px;height:6px;border-radius:50%;background:#C8102E"></div>
-        <span style="font-size:11px;font-weight:700;color:#C8102E;letter-spacing:0.07em;text-transform:uppercase">Payment Failed</span>
-      </div>
-
-      <h3 style="color:#2e1065;font-size:20px;font-weight:800;margin-bottom:8px">Transaction Unsuccessful</h3>
-      <p id="ov-fail-reason" style="color:#7e6ea8;font-size:13px;line-height:1.65;margin-bottom:26px;padding:0 8px">The transaction was not completed.</p>
-
-      <!-- Try Again -->
-      <button onclick="overlayRetry()"
-        style="width:100%;padding:14px;background:linear-gradient(135deg,#4c1d95,#3b0764);color:white;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:0.02em;transition:opacity .2s"
-        onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-        🔄 Try Again
-      </button>
-
-      <!-- Back to Cart -->
-      <button onclick="window.location.href='/'"
-        style="width:100%;padding:13px;background:transparent;color:#7e6ea8;border:1px solid rgba(167,139,250,0.35);border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:0.01em"
-        onmouseover="this.style.background='rgba(167,139,250,0.08)';this.style.borderColor='rgba(167,139,250,0.55)'" 
-        onmouseout="this.style.background='transparent';this.style.borderColor='rgba(167,139,250,0.35)'">
-        ← Back to Cart
-      </button>
-    </div>
-
+    <button onclick="closeFundsModal()" class="modal-btn w-full bg-[#6d28d9] text-white hover:bg-[#7c3aed]">I Understand, Let's Proceed</button>
   </div>
 </div>
-
-<style>
-@keyframes spin      { to { transform: rotate(360deg); } }
-@keyframes vibrate   { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
-@keyframes failPulse { 0%{transform:scale(1);opacity:.7} 70%{transform:scale(1.18);opacity:0} 100%{transform:scale(1.18);opacity:0} }
-</style>
-
-</div><!-- /w-full.max-w-5xl -->
-
+ 
+<!-- ██ MAIN SCRIPT — runs after full HTML parse, synchronous, no events needed ██ -->
 <script>
-const PROMOS = { "ZOVA20": 20, "LAUNCH10": 10, "VIP30": 30 };
-let BASE = 4500;
-let CURRENCY = 'ZMW';
-let PRODUCT_NAME = 'Digital Asset';
-let activeDiscount = 0;
-
-document.addEventListener('DOMContentLoaded', function() {
-    var params = new URLSearchParams(window.location.search);
-    var productParam = params.get('product');
-    var priceParam = parseFloat(params.get('price'));
-    var currencyParam = params.get('currency') || 'ZMW';
-
-    if (productParam && !isNaN(priceParam) && priceParam > 0) {
-        BASE = priceParam;
-        CURRENCY = currencyParam;
-        PRODUCT_NAME = productParam;
-
-        var titleEl = document.getElementById('checkout-title');
-        var currencyEl = document.getElementById('amount-currency');
-        var valueEl = document.getElementById('amount-value');
-        var summaryNameEl = document.getElementById('summary-product-name');
-        var summaryPriceEl = document.getElementById('summary-product-price');
-        var subtotalEl = document.getElementById('subtotal-display');
-        var totalEl = document.getElementById('total-display');
-        var confirmEl = document.getElementById('confirm-price');
-        var btnEl = document.getElementById('pay-btn-text');
-
-        if (titleEl) titleEl.innerText = productParam;
-        if (currencyEl) currencyEl.innerText = currencyParam;
-        if (valueEl) valueEl.innerText = priceParam.toFixed(2);
-        if (summaryNameEl) summaryNameEl.innerText = productParam;
-        if (summaryPriceEl) summaryPriceEl.innerText = currencyParam + ' ' + priceParam.toFixed(0);
-        if (subtotalEl) subtotalEl.innerText = currencyParam + ' ' + priceParam.toFixed(2);
-        if (totalEl) totalEl.innerText = currencyParam + ' ' + priceParam.toFixed(2);
-        if (confirmEl) confirmEl.innerText = currencyParam + ' ' + priceParam.toFixed(2);
-        if (btnEl) btnEl.innerText = 'Pay ' + currencyParam + ' ' + priceParam.toFixed(0);
-    }
-});
-
+var PROMOS        = { "ZOVA20": 20, "LAUNCH10": 10, "VIP30": 30 };
+var BASE          = window.__Z.price;
+var CURRENCY      = window.__Z.currency;
+var activeDiscount = 0;
+ 
+// Fill page immediately — script runs after body is parsed so all IDs exist
+(function() {
+  var C   = CURRENCY;
+  var P   = BASE;
+  var N   = window.__Z.product;
+  var tot = C + ' ' + P.toFixed(2);
+  var codes = {'ZMW':'+260','KES':'+254','NGN':'+234','GHS':'+233','UGX':'+256'};
+ 
+  function set(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+ 
+  set('checkout-title',        N);
+  set('summary-product-name',  N);
+  set('amount-currency',       C);
+  set('amount-value',          P.toFixed(2));
+  set('summary-product-price', C + ' ' + P.toFixed(0));
+  set('subtotal-display',      tot);
+  set('vat-display',           C + ' 0.00');
+  set('total-display',         tot);
+  set('confirm-price',         tot);
+  set('pay-btn-text',          'Pay ' + tot);
+  set('modal-amount',          tot);
+ 
+  if (codes[C]) set('country-code', codes[C]);
+ 
+  setTimeout(showFundsModal, 900);
+})();
+ 
 function updateTotal() {
-    const newTotal = BASE - activeDiscount;
-    const totalStr = `${CURRENCY} ${newTotal.toFixed(2)}`;
-    document.getElementById('total-display').innerText = totalStr;
-    document.getElementById('confirm-price').innerText = totalStr;
-    document.getElementById('pay-btn-text').innerText = `Pay ${totalStr}`;
-}
-
-function toggleAcc() {
-  const body = document.getElementById('acc-body');
-  const icon = document.getElementById('acc-icon');
-  body.classList.toggle('open');
-  icon.classList.toggle('open');
-}
-
-function setNet(id) {
-  document.querySelectorAll('.net-face').forEach(f => {
-    f.style.borderColor = 'transparent';
-    f.style.background = '';
+  var total = BASE - activeDiscount;
+  var s     = CURRENCY + ' ' + total.toFixed(2);
+  ['total-display','confirm-price','modal-amount'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.textContent = s;
   });
-  const colors = { airtel:'#C8102E', mtn:'#FFC107', zamtel:'#007A4D' };
-  const card = document.querySelector(`input[data-net="${id}"]`).nextElementSibling;
-  card.style.borderColor = colors[id];
-  card.style.background = `${colors[id]}18`;
+  var btn = document.getElementById('pay-btn-text');
+  if(btn) btn.textContent = 'Pay ' + s;
 }
-
+ 
+function toggleAcc() {
+  document.getElementById('acc-body').classList.toggle('open');
+  document.getElementById('acc-icon').classList.toggle('open');
+}
+ 
+function setNet(id) {
+  document.querySelectorAll('.net-face').forEach(function(f){
+    f.style.borderColor='transparent'; f.style.background='';
+  });
+  var colors = {airtel:'#C8102E',mtn:'#FFC107',zamtel:'#007A4D'};
+  var card = document.querySelector('input[data-net="'+id+'"]').nextElementSibling;
+  card.style.borderColor = colors[id];
+  card.style.background  = colors[id]+'18';
+}
+ 
 function applyPromo() {
-  const val = document.getElementById('promo-input').value.trim().toUpperCase();
-  const msg = document.getElementById('promo-msg');
-  const discEl = document.getElementById('discount-display');
-
+  var val   = document.getElementById('promo-input').value.trim().toUpperCase();
+  var msg   = document.getElementById('promo-msg');
+  var discEl = document.getElementById('discount-display');
   if (PROMOS[val]) {
-    const pct = PROMOS[val];
+    var pct = PROMOS[val];
     activeDiscount = Math.round(BASE * pct / 100);
-    discEl.textContent = `-${CURRENCY} ${activeDiscount.toFixed(2)}`;
+    discEl.textContent = '-'+CURRENCY+' '+activeDiscount.toFixed(2);
     updateTotal();
-    msg.textContent = `✓ ${pct}% discount applied`;
+    msg.textContent = '✓ '+pct+'% discount applied';
     msg.className = 'text-[11px] mt-1.5 text-[#7c3aed] font-medium';
     msg.classList.remove('hidden');
   } else if (val) {
@@ -559,181 +355,88 @@ function applyPromo() {
     msg.classList.remove('hidden');
   }
 }
-
+ 
 function validatePhone() { validateForm(); }
-
 function validateForm() {
-  const phone = document.getElementById('phone-input').value.replace(/\D/g,'');
-  const terms = document.getElementById('terms-check').checked;
-  const recurring = document.getElementById('recurring-check').checked;
-  document.getElementById('pay-btn').disabled = !(phone.length >= 8 && terms && recurring);
+  var phone = document.getElementById('phone-input').value.replace(/\D/g,'');
+  var terms = document.getElementById('terms-check').checked;
+  var rec   = document.getElementById('recurring-check').checked;
+  document.getElementById('pay-btn').disabled = !(phone.length >= 8 && terms && rec);
 }
-
-let pollingInterval = null;
-let timerInterval   = null;
-let lastTxnId       = null;
-let cancelled       = false; // guard against post-cancel callbacks
-
-// ── Overlay helpers ──────────────────────────────
-function overlayShow(state) {
-  const ov = document.getElementById('pay-overlay');
-  ov.style.display = 'flex';
-  ['ov-init','ov-wait','ov-ok','ov-fail'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
-  });
-  document.getElementById(state).style.display = 'block';
-}
-
-function overlayClose() {
-  cancelled = true;                   // stop any in-flight callback
-  clearInterval(pollingInterval);     pollingInterval = null;
-  clearInterval(timerInterval);       timerInterval   = null;
-  document.getElementById('pay-overlay').style.display = 'none';
-  resetPayBtn(document.getElementById('pay-btn'));
-}
-
-function overlayRetry() {
-  overlayClose();
-}
-
-function startTimer(seconds) {
-  clearInterval(timerInterval);
-  let remaining = seconds;
-  const el = document.getElementById('ov-timer');
-  const tick = () => {
-    const m = Math.floor(remaining / 60);
-    const s = remaining % 60;
-    el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
-    if (remaining <= 0) clearInterval(timerInterval);
-    remaining--;
-  };
-  tick();
-  timerInterval = setInterval(tick, 1000);
-}
-
-// ── Main payment handler ─────────────────────────
+ 
+function showFundsModal() { document.getElementById('funds-modal').classList.add('open'); }
+function closeFundsModal(){ document.getElementById('funds-modal').classList.remove('open'); }
+ 
+var pollingInterval = null;
+ 
 async function handlePay() {
-  const btn     = document.getElementById('pay-btn');
-  const phone   = document.getElementById('phone-input').value.replace(/\D/g,'');
-  const network = document.querySelector('input[name="network"]:checked').dataset.net;
-
-  cancelled = false; // reset for new attempt
-  btn.disabled = true;
-  overlayShow('ov-init');
-  document.getElementById('ov-init-txt').textContent =
-    `Initiating STK push via ${network.toUpperCase()}...`;
-
+  var btn      = document.getElementById('pay-btn');
+  var errorBox = document.getElementById('pay-error');
+  var phone    = document.getElementById('phone-input').value.replace(/\D/g,'');
+  var network  = document.querySelector('input[name="network"]:checked').dataset.net;
+  errorBox.classList.add('hidden'); errorBox.innerText='';
+  btn.innerHTML='<span class="flex items-center gap-2 mx-auto"><svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Connecting to '+network.toUpperCase()+'...</span>';
+  btn.disabled=true;
   try {
-    const response = await fetch('/api/pay', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        phone, amount: BASE - activeDiscount,
-        currency: CURRENCY, network, product: PRODUCT_NAME
-      })
-    });
-    const data = await response.json();
-
+    var res  = await fetch('http://127.0.0.1:5000/api/pay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:phone,amount:BASE-activeDiscount,currency:CURRENCY,network:network})});
+    var data = await res.json();
     if (data.success && data.transaction_id) {
-      lastTxnId = data.transaction_id;
-      overlayShow('ov-wait');
-      document.getElementById('ov-net-txt').innerHTML =
-        `A prompt was sent to your <strong>${network.toUpperCase()}</strong> number.<br>Enter your mobile money PIN to complete.`;
-      startTimer(120);
-      pollStatus(data.transaction_id);
+      btn.innerHTML='<span class="flex items-center gap-2 mx-auto"><svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Check phone & enter PIN...</span>';
+      btn.style.background='#7c3aed';
+      pollStatus(data.transaction_id,btn);
     } else {
-      // Immediate failure (insufficient funds, wrong number, etc.)
-      overlayShow('ov-fail');
-      document.getElementById('ov-fail-reason').textContent =
-        data.message || 'Could not initiate payment. Check your number and try again.';
+      btn.innerHTML='<span>Payment Failed</span>'; btn.style.background='#C8102E';
+      var msg = data.message||'Error initiating payment.';
+      if(msg.toLowerCase().includes('insufficient')||msg.toLowerCase().includes('funds')||msg.toLowerCase().includes('limit')){showFundsModal();}
+      else{errorBox.innerText=msg;errorBox.classList.remove('hidden');}
+      setTimeout(function(){resetPayBtn(btn);},4000);
     }
-  } catch (err) {
-    console.error(err);
-    overlayShow('ov-fail');
-    document.getElementById('ov-fail-reason').textContent =
-      'Network error. Please check your connection and try again.';
+  } catch(e) {
+    btn.innerHTML='<span>Network Error</span>'; btn.style.background='#C8102E';
+    errorBox.innerText='Network error. Please try again.'; errorBox.classList.remove('hidden');
+    setTimeout(function(){resetPayBtn(btn);},4000);
   }
 }
-
-// ── Status polling ───────────────────────────────
-async function pollStatus(txnId) {
-  clearInterval(pollingInterval);
-  let attempts = 0;
-  const maxAttempts = 24; // ~2 mins at 5 s intervals
-
-  pollingInterval = setInterval(async () => {
-    if (cancelled) { clearInterval(pollingInterval); return; } // hard stop
-    attempts++;
-    if (attempts > maxAttempts) {
+ 
+async function pollStatus(txnId,btn) {
+  var attempts=0,max=24,errorBox=document.getElementById('pay-error');
+  pollingInterval=setInterval(async function(){
+    if(++attempts>max){
       clearInterval(pollingInterval);
-      clearInterval(timerInterval);
-      overlayShow('ov-fail');
-      document.getElementById('ov-fail-reason').textContent =
-        'Session timed out. Please try again.';
-      return;
+      btn.innerHTML='<span>Timeout. Try again later.</span>'; btn.style.background='#C8102E';
+      errorBox.innerText='Payment timed out. If you approved on your phone, contact support.';
+      errorBox.classList.remove('hidden');
+      setTimeout(function(){resetPayBtn(btn);},4000); return;
     }
-    try {
-      const res  = await fetch(`/api/status/${txnId}`);
-      const data = await res.json();
-      if (data.success) {
-        if (data.status === 'SUCCESSFUL') {
+    try{
+      var res=await fetch('http://127.0.0.1:5000/api/status/'+txnId);
+      var data=await res.json();
+      if(data.success){
+        if(data.status==='SUCCESSFUL'){
           clearInterval(pollingInterval);
-          clearInterval(timerInterval);
-          overlayShow('ov-ok');
-          document.getElementById('ov-product').textContent =
-            '✅ ' + (data.product_name || PRODUCT_NAME);
-          if (data.download_link) {
-            setTimeout(() => { window.location.href = data.download_link; }, 2000);
-          }
-        } else if (data.status === 'FAILED' || data.status === 'CANCELLED') {
+          btn.innerHTML='<span class="flex items-center gap-2 mx-auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Payment Successful!</span>';
+          btn.style.background='#22C55E';
+          if(data.download_link) setTimeout(function(){window.location.href=data.download_link;},1500);
+        } else if(data.status==='FAILED'){
           clearInterval(pollingInterval);
-          clearInterval(timerInterval);
-          overlayShow('ov-fail');
-          document.getElementById('ov-fail-reason').textContent =
-            data.reason || 'The payment was not completed. Please try again.';
+          btn.innerHTML='<span>Payment Failed</span>'; btn.style.background='#C8102E';
+          errorBox.innerText=data.reason||'Payment was declined by the network.';
+          errorBox.classList.remove('hidden');
+          setTimeout(function(){resetPayBtn(btn);},5000);
         }
-        // PENDING → keep waiting
       }
-    } catch (e) { console.error('Polling error', e); }
-  }, 5000);
+    }catch(e){console.error('poll',e);}
+  },5000);
 }
-
-function resetPayBtn(btn) {
-  btn.disabled = false;
-  btn.style.background = '';
-  btn.innerHTML = `<span id="pay-btn-text">Pay ${CURRENCY} ${(BASE - activeDiscount).toFixed(2)}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" class="group-hover:translate-x-0.5 transition-transform"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>`;
+ 
+function resetPayBtn(btn){
+  btn.disabled=false; btn.style.background='';
+  btn.innerHTML='<span id="pay-btn-text">Pay '+CURRENCY+' '+(BASE-activeDiscount).toFixed(2)+'</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
+  var e=document.getElementById('pay-error'); if(e){e.classList.add('hidden');e.innerText='';}
 }
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('promo-input') === document.activeElement) applyPromo();
+ 
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&document.getElementById('promo-input')===document.activeElement) applyPromo();
 });
 </script>
-<script>
-(function() {
-  var p = new URLSearchParams(window.location.search);
-  var prod = p.get('product');
-  var price = parseFloat(p.get('price'));
-  var curr = p.get('currency') || 'ZMW';
-  if (!prod || isNaN(price) || price <= 0) return;
-  var map = {
-    'checkout-title': prod,
-    'amount-currency': curr,
-    'amount-value': price.toFixed(2),
-    'summary-product-name': prod,
-    'summary-product-price': curr + ' ' + Math.round(price),
-    'subtotal-display': curr + ' ' + price.toFixed(2),
-    'total-display': curr + ' ' + price.toFixed(2),
-    'confirm-price': curr + ' ' + price.toFixed(2),
-    'pay-btn-text': 'Pay ' + curr + ' ' + price.toFixed(2)
-  };
-  Object.keys(map).forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) el.textContent = map[id];
-  });
-  if (typeof BASE !== 'undefined') BASE = price;
-  if (typeof CURRENCY !== 'undefined') CURRENCY = curr;
-  if (typeof PRODUCT_NAME !== 'undefined') PRODUCT_NAME = prod;
-})();
-</script>
 </body>
-</html>
