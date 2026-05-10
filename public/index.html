@@ -36,6 +36,7 @@ button, a { cursor: pointer; font-family: inherit; text-decoration: none; }
 .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
 .fade-up.visible { opacity: 1; transform: none; }
 
+body { font-family: 'Inter', sans-serif; }
 h1,h2,h3,.brand { font-family: 'Manrope', sans-serif; }
 
 /* Nav */
@@ -107,7 +108,8 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 .prc-cta { display: block; width: 100%; text-align: center; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.3s; margin-top: auto; }
 
 /* About */
-.about-inner { max-width: 900px; margin: 0 auto; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.about-visual { border-radius: 20px; overflow: hidden; min-height: 320px; background: linear-gradient(135deg, rgba(160,120,255,0.15), rgba(225,78,246,0.1)); border: 1px solid var(--glass-bdr); display: flex; align-items: center; justify-content: center; font-size: 80px; }
 
 /* Services */
 .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -139,12 +141,6 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 .footer-col a:hover { color: var(--on-surface); }
 
 @media(max-width: 900px) {
-  .faq-inner {
-    padding: 40px 24px !important;
-  }
-  .about-inner {
-    padding: 40px 24px !important;
-  }
   .about-grid,.services-grid { grid-template-columns: 1fr; }
   .pricing-grid { grid-template-columns: 1fr; }
   .prc-popular-badge { font-size: 9px; }
@@ -165,16 +161,27 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     padding: 36px 20px !important;
     gap: 32px !important;
   }
+  /* Reorder FAQ so Q&A comes before image */
+  #faq .glass-panel > div:first-child { order: 2; }
+  #faq .glass-panel > div:last-child  { order: 1; }
+
+  /* Reduce about image height */
+  #about .glass-panel > div:last-child {
+    min-height: 260px !important;
+  }
+  #faq .glass-panel > div:first-child {
+    min-height: 220px !important;
+  }
 
   /* Section headings */
   #about .glass-panel h2 { font-size: 26px !important; }
   #faq   .glass-panel h2 { font-size: 28px !important; }
 
   /* Stats row: smaller font so 3 cols still fit */
-  #about .glass-panel .stats-container > div {
+  #about .glass-panel > div:first-child > div:last-child > div {
     padding: 16px 10px !important;
   }
-  #about .glass-panel .stats-container > div > div:first-child {
+  #about .glass-panel > div:first-child > div:last-child > div > div:first-child {
     font-size: 24px !important;
   }
 
@@ -198,11 +205,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   /* Pill badge: smaller on mobile */
   .pill-badge { font-size: 11px; padding: 8px 16px; }
 }
-
-/* Support FAB */
-.support-fab { position: fixed; bottom: 32px; right: 32px; background: #25D366; color: white; padding: 12px 24px; border-radius: 9999px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 12px 32px rgba(37,211,102,0.4); z-index: 1000; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); font-weight: 700; font-size: 14px; }
-.support-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 20px 48px rgba(37,211,102,0.6); }
-@media(max-width: 600px) { .support-fab span { display: none; } .support-fab { padding: 16px; border-radius: 50%; } }
+@media (max-width: 768px) { .about-inner, .faq-inner { grid-template-columns: 1fr !important; gap: 40px !important; } }
 </style>
 </head>
 <body class="mesh-bg slash-overlay">
@@ -247,28 +250,33 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 </div>
 
 <section id="about" class="fade-up">
-  <div class="glass-panel about-inner" style="padding:80px 40px; border-radius:32px; max-width: 900px; margin: 0 auto; text-align: center;">
-    <div class="sec-label" style="color:var(--primary); margin-bottom: 20px;">The Zova Mission</div>
-    <h2 style="margin-bottom:32px; font-size:clamp(32px, 5vw, 48px); line-height:1.1; letter-spacing: -0.02em;">Bridging the Gap for<br><span class="grad">Digital Entrepreneurs.</span></h2>
-    
-    <div style="display: flex; flex-direction: column; gap: 24px; max-width: 720px; margin: 0 auto 56px;">
-        <p style="color:var(--on-muted); font-size:18px; line-height:1.8;">The African creator economy is exploding, but payment barriers and generic tools hold us back. Zova Digital provides high-performance assets that work for our local context.</p>
-        <p style="color:var(--on-muted); font-size:18px; line-height:1.8;">We don't just sell templates; we build the infrastructure for the next generation of African digital giants. Instantly accessible, locally relevant, and world-class in quality.</p>
+  <div class="glass-panel about-inner" style="padding:80px 60px;border-radius:32px;display:grid;grid-template-columns:1.2fr 0.8fr;gap:60px;align-items:center">
+    <div>
+      <div class="sec-label" style="text-align:left;color:#6d3bd7">The Zova Mission</div>
+      <h2 style="text-align:left;margin-bottom:24px;font-size:42px;line-height:1.1">Bridging the Gap for<br>Digital Entrepreneurs</h2>
+      <p style="color:var(--on-muted);font-size:18px;line-height:1.8;margin-bottom:24px">The African creator economy is exploding, but payment barriers and generic tools hold us back. Zova Digital provides high-performance assets that work for our local context.</p>
+      <p style="color:var(--on-muted);font-size:18px;line-height:1.8;margin-bottom:48px">We don't just sell templates; we build the infrastructure for the next generation of African digital giants. Instantly accessible, locally relevant, and world-class in quality.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+        <div style="background:rgba(255,255,255,0.03);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#d0bcff">2.5k+</div>
+          <div style="font-size:12px;color:var(--on-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px">Assets Sold</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#fbabff">15+</div>
+          <div style="font-size:12px;color:var(--on-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px">Countries</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.06)">
+          <div style="font-family:'Manrope',sans-serif;font-size:32px;font-weight:800;color:#adc6ff">24/7</div>
+          <div style="font-size:12px;color:var(--on-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px">Delivery</div>
+        </div>
+      </div>
     </div>
-
-    <div class="stats-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:24px; margin-top: 40px;">
-      <div style="background:rgba(255,255,255,0.02); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s ease;">
-        <div style="font-family:'Manrope',sans-serif; font-size:40px; font-weight:800; color:#d0bcff; margin-bottom: 8px;">2.5k+</div>
-        <div style="font-size:11px; color:var(--on-muted); text-transform:uppercase; letter-spacing:0.1em;">Assets Sold</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.02); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s ease;">
-        <div style="font-family:'Manrope',sans-serif; font-size:40px; font-weight:800; color:#fbabff; margin-bottom: 8px;">15+</div>
-        <div style="font-size:11px; color:var(--on-muted); text-transform:uppercase; letter-spacing:0.1em;">Countries</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.02); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s ease;">
-        <div style="font-family:'Manrope',sans-serif; font-size:40px; font-weight:800; color:#adc6ff; margin-bottom: 8px;">24/7</div>
-        <div style="font-size:11px; color:var(--on-muted); text-transform:uppercase; letter-spacing:0.1em;">Delivery</div>
-      </div>
+    <div style="position:relative;height:100%;min-height:400px;background:url('./assets/man_portrait.png') center/cover;border-radius:24px;border:1px solid rgba(255,255,255,0.1)">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(11,19,38,0.8), transparent)"></div>
+        <div style="position:absolute;bottom:30px;left:30px;right:30px;background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);padding:20px;border-radius:16px;border:1px solid rgba(255,255,255,0.1)">
+            <p style="font-size:14px;font-weight:600;color:#fff">"Technology is the great equalizer. We're here to make sure Africa leads the charge."</p>
+            <p style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:8px">— Team Zova</p>
+        </div>
     </div>
   </div>
 </section>
@@ -279,21 +287,17 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   <p class="sec-desc">Beyond our digital assets, we provide dedicated services to help your business thrive in the digital economy.</p>
   <div class="services-grid">
     <div class="scard glass-panel fade-up">
-      <img src="/assets/svc-webdev.jpg"
-           alt="Web App Development"
-           style="width:100%;height:200px;object-fit:cover;
-                  border-radius:12px;display:block;margin-bottom:20px">
+      <div class="scard-img-wrap">
+        <img src="./assets/svc-webdev.jpg" alt="Web App Development">
+      </div>
       <div class="scard-body">
         <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--on-surface)">Web App Development</h3>
         <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Custom, high-performance web applications built with Next.js, React, and modern backend architectures tailored for African markets.</p>
       </div>
     </div>
     <div class="scard glass-panel fade-up" style="transition-delay:0.1s">
-      <div style="position:relative">
-        <img src="/assets/svc-mobilemoney.jpg"
-             alt="Mobile Money Integration"
-             style="width:100%;height:200px;object-fit:cover;
-                    border-radius:12px;display:block;margin-bottom:20px">
+      <div class="scard-img-wrap">
+        <img src="./assets/svc-mobilemoney.jpg" alt="Mobile Money Integration">
         <div style="position:absolute;top:14px;right:14px;z-index:2;background:rgba(34,197,94,0.15);color:#22C55E;padding:4px 12px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.08em;border:1px solid rgba(34,197,94,0.3);backdrop-filter:blur(8px)">POPULAR</div>
       </div>
       <div class="scard-body">
@@ -302,20 +306,18 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
       </div>
     </div>
     <div class="scard glass-panel fade-up" style="transition-delay:0.2s">
-      <img src="/assets/svc-ai.jpg"
-           alt="AI Prompt Engineering"
-           style="width:100%;height:200px;object-fit:cover;
-                  border-radius:12px;display:block;margin-bottom:20px">
+      <div class="scard-img-wrap">
+        <img src="./assets/svc-ai.jpg" alt="AI Prompt Engineering">
+      </div>
       <div class="scard-body">
         <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--on-surface)">AI Prompt Engineering</h3>
         <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Battle-tested prompt packs for ChatGPT, Midjourney, and Claude — engineered to deliver results for African content creators.</p>
       </div>
     </div>
     <div class="scard glass-panel fade-up" style="transition-delay:0.3s">
-      <img src="/assets/svc-brandkit.jpg"
-           alt="Brand Kit Design"
-           style="width:100%;height:200px;object-fit:cover;
-                  border-radius:12px;display:block;margin-bottom:20px">
+      <div class="scard-img-wrap">
+        <img src="./assets/svc-brandkit.jpg" alt="Brand Kit Design">
+      </div>
       <div class="scard-body">
         <h3 style="font-family:'Manrope',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--on-surface)">Brand Kit Design</h3>
         <p style="color:var(--on-muted);font-size:15px;line-height:1.7">Professionally designed Canva brand kits and logo systems that make your business look world-class from day one.</p>
@@ -336,7 +338,6 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
       <option value="UGX" data-methods="MTN, Airtel">🇺🇬 Uganda (UGX)</option>
     </select>
     <div id="paymentMethods" class="payment-methods-text">Pay securely with MTN, Airtel, Zamtel. No card needed.</div>
-    <div id="rate-warning" class="text-[11px] text-amber-400 mt-2 hidden">Prices are approximate based on latest cached data.</div>
   </div>
   <div class="pricing-grid">
 
@@ -367,7 +368,7 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
                 <img src="./assets/mockup2.png" class="prc-img" alt="Viral Reel Hook Library Mockup" onerror="this.src='./assets/man_portrait.png'">
             </div>
             <div class="prc-header">
-                <div class="prc-icon">📹</div>
+                <div class="prc-icon">🎥</div>
                 <div class="prc-title-group">
                     <div class="prc-tag">TEMPLATE</div>
                     <div class="prc-title">Viral Reel Hook Library</div>
@@ -477,12 +478,12 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     <div class="tcard glass-panel">
       <div class="stars">★★★★★</div>
       <p class="tcard-quote">"The Instagram Growth Blueprint changed everything. I went from 200 followers to 5,000 in just two months. The Lusaka hashtag strategy is a game changer!"</p>
-      <div class="tcard-author"><div class="tcard-avatar">👩🏾</div><div><div class="tcard-name">Chanda M.</div><div class="tcard-role">Influencer, Lusaka</div></div></div>
+      <div class="tcard-author"><div class="tcard-avatar">🤳🏾</div><div><div class="tcard-name">Chanda M.</div><div class="tcard-role">Influencer, Lusaka</div></div></div>
     </div>
     <div class="tcard glass-panel">
       <div class="stars">★★★★★</div>
       <p class="tcard-quote">"Finally, high-quality hooks I can actually use. My Reels are getting 10x more views since I started using the Hook Library."</p>
-      <div class="tcard-author"><div class="tcard-avatar">📹</div><div><div class="tcard-name">Natasha K.</div><div class="tcard-role">Content Creator, Ndola</div></div></div>
+      <div class="tcard-author"><div class="tcard-avatar">🎥</div><div><div class="tcard-name">Natasha K.</div><div class="tcard-role">Content Creator, Ndola</div></div></div>
     </div>
     <div class="tcard glass-panel">
       <div class="stars">★★★★★</div>
@@ -503,29 +504,38 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
 </section>
 
 <section id="faq" class="fade-up">
-  <div class="glass-panel faq-inner" style="padding:80px 40px; border-radius:32px; max-width: 900px; margin: 0 auto;">
-    <div style="text-align: center; margin-bottom: 64px;">
-      <div class="sec-label" style="color:var(--primary); margin-bottom:16px">Intelligent FAQ</div>
-      <h2 style="margin-bottom:24px; font-size:clamp(32px, 5vw, 48px); line-height:1.1; letter-spacing:-0.03em">Your Questions,<br><span class="grad">Direct Answers.</span></h2>
-      <p style="color:var(--on-muted); font-size:16px; max-width: 500px; margin: 0 auto;">Quick answers to common questions about our assets and payments.</p>
+  <div class="glass-panel faq-inner" style="padding:80px 60px; border-radius:32px; display:grid; grid-template-columns: 1fr 1.2fr; gap:80px; align-items: center;">
+    <div style="position:relative; height:100%; min-height:500px; background:url('./assets/man_portrait.png') center/cover; border-radius:24px; border:1px solid rgba(255,255,255,0.12); box-shadow: 0 24px 80px rgba(0,0,0,0.5)">
+        <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(11,19,38,0.9), transparent)"></div>
+        <div style="position:absolute; bottom:40px; left:30px; right:30px; background:rgba(255,255,255,0.03); backdrop-filter:blur(30px); padding:32px; border-radius:24px; border:1px solid rgba(255,255,255,0.08)">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px">
+                <div style="width:10px; height:10px; border-radius:50%; background:#22C55E; box-shadow:0 0 12px #22C55E"></div>
+                <span style="font-size:12px; font-weight:700; color:#fff; letter-spacing:0.1em; text-transform:uppercase">Expert Support Available</span>
+            </div>
+            <h3 style="font-family:'Manrope',sans-serif; font-size:28px; font-weight:800; color:#fff; margin-bottom:12px; line-height:1.2">Always here for your<br>digital journey</h3>
+            <p style="font-size:15px; color:rgba(255,255,255,0.5); line-height:1.7">From Lusaka to Lagos, we ensure your digital assets are delivered instantly, every single time.</p>
+        </div>
     </div>
-    
-    <div class="faq-grid" style="grid-template-columns: 1fr; max-width: 720px; margin: 0 auto;">
-      <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
-        <div class="faq-q" onclick="toggleFaq(this)" style="padding:24px 28px; font-size:17px; font-weight:600">How do I access my digital assets? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Instantly. As soon as your mobile money payment is verified (usually 5-10 seconds), you'll receive an automated SMS and email with your high-speed download link.</div>
-      </div>
-      <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
-        <div class="faq-q" onclick="toggleFaq(this)" style="padding:24px 28px; font-size:17px; font-weight:600">Which countries and networks are supported? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">We currently offer native mobile money support for Zambia (Airtel, MTN, Zamtel), Kenya (M-Pesa), Nigeria (Bank & Cards), Ghana, and Uganda.</div>
-      </div>
-      <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
-        <div class="faq-q" onclick="toggleFaq(this)" style="padding:24px 28px; font-size:17px; font-weight:600">Is there a limit on downloads? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Absolutely not. Your purchase grants you lifetime access. You can download your files as many times as you need, from any device, forever.</div>
-      </div>
-      <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px;">
-        <div class="faq-q" onclick="toggleFaq(this)" style="padding:24px 28px; font-size:17px; font-weight:600">What if my payment doesn't go through? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-        <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Don't panic. Our support team is available 24/7. Just hit the WhatsApp help button below, and we'll verify your transaction manually.</div>
+    <div>
+      <div class="sec-label" style="text-align:left; color:var(--primary); margin-bottom:16px">Intelligent FAQ</div>
+      <h2 style="text-align:left; margin-bottom:40px; font-size:48px; line-height:1.1; letter-spacing:-0.03em">Your Questions,<br><span style="color:var(--primary)">Direct Answers.</span></h2>
+      <div class="faq-grid" style="grid-template-columns: 1fr;">
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">How do I access my digital assets? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Instantly. As soon as your mobile money payment is verified (usually 5-10 seconds), you'll receive an automated SMS and email with your high-speed download link. All files are hosted on premium CDNs for the fastest possible downloads in Africa.</div>
+        </div>
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">Which countries and networks are supported? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">We currently offer native mobile money support for Zambia (Airtel, MTN, Zamtel), Kenya (M-Pesa), Nigeria (Bank & Cards), Ghana, and Uganda. Our infrastructure is powered by Lenco BroadPay for maximum reliability.</div>
+        </div>
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px; margin-bottom:12px">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">Is there a limit on downloads? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Absolutely not. Your purchase grants you lifetime access. You can download your files as many times as you need, from any device, forever. We also provide free updates to guides and libraries.</div>
+        </div>
+        <div class="faq-item" style="border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.015); border-radius:20px;">
+          <div class="faq-q" onclick="toggleFaq(this)" style="padding:28px; font-size:17px; font-weight:600">What if my payment doesn't go through? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+          <div class="faq-a" style="padding:0 28px 28px; font-size:15px; color:var(--on-muted); line-height:1.7">Don't panic. Our support team is available 24/7. Just hit the WhatsApp help button below, and we'll verify your transaction manually and send your links within minutes. Your satisfaction is our absolute priority.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -535,6 +545,12 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
   <span>Help</span>
 </div>
+
+<style>
+.support-fab { position: fixed; bottom: 32px; right: 32px; background: #25D366; color: white; padding: 12px 24px; border-radius: 9999px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 12px 32px rgba(37,211,102,0.4); z-index: 1000; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); font-weight: 700; font-size: 14px; }
+.support-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 20px 48px rgba(37,211,102,0.6); }
+@media(max-width: 600px) { .support-fab span { display: none; } .support-fab { padding: 16px; border-radius: 50%; } }
+</style>
 
 <footer style="border-top:1px solid rgba(255,255,255,0.06);background:rgba(6,14,32,0.5)">
   <div class="footer-grid">
@@ -570,6 +586,8 @@ h1 span.grad { background: linear-gradient(135deg, #d0bcff 0%, #fbabff 100%); -w
     <div style="display:flex;gap:8px">
       <span style="font-size:12px;color:var(--outline)">Powered by</span>
       <span style="font-size:12px;font-weight:700;color:var(--on-muted)">Lenco BroadPay</span>
+    </div>
+  </div>
     </div>
   </div>
 </footer>
@@ -622,13 +640,12 @@ let currentRates = {
 // Simulated Live Fetch
 async function fetchRates() {
     try {
-        const res = await fetch('https://api.exchangerate-api.com/v4/latest/ZMW');
-        const data = await res.json();
-        currentRates = { ...currentRates, ...data.rates };
-        console.log("Rates updated from API");
+        // In real use: const res = await fetch('https://api.exchangerate-api.com/v4/latest/ZMW');
+        // const data = await res.json();
+        // currentRates = { ...currentRates, ...data.rates };
+        console.log("Rates updated from API (simulated)");
     } catch (e) {
         console.log("Using fallback rates");
-        document.getElementById('rate-warning').classList.remove('hidden');
     }
 }
 fetchRates();
