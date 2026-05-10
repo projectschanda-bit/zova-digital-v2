@@ -487,10 +487,6 @@ window.onload = () => {
     const priceParam = parseFloat(params.get('price'));
     const currencyParam = params.get('currency') || 'ZMW';
 
-    console.log('product:', productParam);
-    console.log('price:', priceParam);
-    console.log('currency:', currencyParam);
-
     if (productParam && !isNaN(priceParam) && priceParam > 0) {
         BASE = priceParam;
         CURRENCY = currencyParam;
@@ -514,7 +510,7 @@ window.onload = () => {
         if (subtotalEl) subtotalEl.innerText = currencyParam + ' ' + priceParam.toFixed(2);
         if (totalEl) totalEl.innerText = currencyParam + ' ' + priceParam.toFixed(2);
         if (confirmEl) confirmEl.innerText = currencyParam + ' ' + priceParam.toFixed(2);
-        if (btnEl) btnEl.innerText = 'Pay ' + currencyParam + ' ' + priceParam.toFixed(2);
+        if (btnEl) btnEl.innerText = 'Pay ' + currencyParam + ' ' + priceParam.toFixed(0);
     }
 };
 
